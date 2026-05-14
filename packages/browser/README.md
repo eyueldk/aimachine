@@ -1,18 +1,18 @@
-# @aitoolkit/browser
+# @aimachine/browser
 
-[![npm](https://img.shields.io/npm/v/@aitoolkit/browser)](https://www.npmjs.com/package/@aitoolkit/browser)
+[![npm](https://img.shields.io/npm/v/@aimachine/browser)](https://www.npmjs.com/package/@aimachine/browser)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 [**puppeteer-core**](https://pptr.dev/) **browser tools** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). This library does **not** download Chromium—point `launch` at an installed Chrome/Chromium (or install [`puppeteer`](https://www.npmjs.com/package/puppeteer) separately in your app if you want managed downloads).
 
-**Repository:** [github.com/eyueldk/aitoolkit](https://github.com/eyueldk/aitoolkit) (`packages/browser`)
+**Repository:** [github.com/aimachine/aimachine](https://github.com/aimachine/aimachine) (`packages/browser`)
 
 ## Install
 
 ```bash
-pnpm add @aitoolkit/browser
+pnpm add @aimachine/browser
 # or
-npm install @aitoolkit/browser
+npm install @aimachine/browser
 ```
 
 **Requirements:** Node.js **20+**. Runtime dependency is **`puppeteer-core`** only (no bundled browser). Supply **`executablePath`** (or **`channel`** where supported) when calling **`launch`**, e.g. Chrome stable on your server or a path from [`@puppeteer/browsers`](https://www.npmjs.com/package/@puppeteer/browsers).
@@ -29,7 +29,7 @@ When **developing this repo**, **`puppeteer`** is a devDependency so tests can l
 ```ts
 import { generateText, stepCountIs } from "ai";
 import { launch } from "puppeteer-core";
-import { createBrowserTools, Session } from "@aitoolkit/browser";
+import { createBrowserTools, Session } from "@aimachine/browser";
 
 const browser = await launch({
   headless: true,

@@ -1,5 +1,5 @@
 {
-  "name": "@aitoolkit/browser",
+  "name": "@aimachine/browser",
   "version": "1.0.0",
   "description": "puppeteer-core browser tools for the Vercel AI SDK (bring your own Chromium)",
   "license": "MIT",
@@ -24,13 +24,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eyueldk/aitoolkit.git",
+    "url": "https://github.com/aimachine/aimachine.git",
     "directory": "packages/browser"
   },
   "bugs": {
-    "url": "https://github.com/eyueldk/aitoolkit/issues"
+    "url": "https://github.com/aimachine/aimachine/issues"
   },
-  "homepage": "https://github.com/eyueldk/aitoolkit/tree/main/packages/browser#readme",
+  "homepage": "https://github.com/aimachine/aimachine/tree/main/packages/browser#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm build",
@@ -38,8 +38,8 @@
     "test": "vitest run"
   },
   "keywords": [
-    "aitoolkit",
-    "@aitoolkit/browser",
+    "aimachine",
+    "@aimachine/browser",
     "ai-sdk",
     "vercel-ai-sdk",
     "openrouter",

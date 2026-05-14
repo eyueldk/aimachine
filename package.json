@@ -1,12 +1,12 @@
 {
-  "name": "aitoolkit",
+  "name": "aimachine",
   "private": true,
-  "description": "Monorepo for @aitoolkit packages",
+  "description": "Monorepo for @aimachine packages",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -F @aitoolkit/browser build",
-    "check": "pnpm -F @aitoolkit/browser check",
-    "test": "pnpm -F @aitoolkit/browser test"
+    "build": "pnpm -F @aimachine/browser build",
+    "check": "pnpm -F @aimachine/browser check",
+    "test": "pnpm -F @aimachine/browser test"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

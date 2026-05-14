@@ -1,12 +1,12 @@
-# aitoolkit
+# aimachine
 
-pnpm monorepo for **[@aitoolkit/browser](packages/browser)** and related packages.
+pnpm monorepo for **[@aimachine/browser](packages/browser)** and related packages.
 
 ## Packages
 
 | Package | Description |
 | --- | --- |
-| [@aitoolkit/browser](packages/browser) | Puppeteer-backed browser tools for the [Vercel AI SDK](https://ai-sdk.dev) |
+| [@aimachine/browser](packages/browser) | puppeteer-core browser tools for the [Vercel AI SDK](https://ai-sdk.dev) |
 
 ## Development
 

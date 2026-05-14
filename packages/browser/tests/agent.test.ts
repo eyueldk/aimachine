@@ -33,7 +33,7 @@ describe.skipIf(!hasOpenRouterKey)("Agent with browser tools", () => {
 
       const openrouter = createOpenRouter({
         apiKey: process.env.OPENROUTER_API_KEY!,
-        appName: "@aitoolkit/browser",
+        appName: "@aimachine/browser",
       });
 
       const result = await generateText({
