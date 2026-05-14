@@ -6,7 +6,7 @@ pnpm monorepo for **[@aimachine/browser](packages/browser)** and related package
 
 | Package | Description |
 | --- | --- |
-| [@aimachine/browser](packages/browser) | puppeteer-core browser tools for the [Vercel AI SDK](https://ai-sdk.dev) |
+| [@aimachine/browser](packages/browser) | Puppeteer browser tools for the [Vercel AI SDK](https://ai-sdk.dev) |
 
 ## Development
 

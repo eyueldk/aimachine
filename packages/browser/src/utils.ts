@@ -1,4 +1,4 @@
-import type { Page } from "puppeteer-core";
+import type { Page } from "puppeteer";
 
 export async function getView(page: Page) {
   return [

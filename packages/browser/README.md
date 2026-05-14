@@ -3,17 +3,18 @@
 [![npm](https://img.shields.io/npm/v/@aimachine/browser)](https://www.npmjs.com/package/@aimachine/browser)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-**puppeteer-core** tools for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). No bundled browser—pass `executablePath` (or `channel`) to `launch`, or add [`puppeteer`](https://www.npmjs.com/package/puppeteer) in your app if you want Chromium downloads.
+[**Puppeteer**](https://www.npmjs.com/package/puppeteer) tools for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). Types and tooling align with the `puppeteer` package (it bundles Chromium via install scripts unless you configure otherwise).
 
 **Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/browser`)
 
 ## Install
 
 ```bash
-pnpm add @aimachine/browser
+pnpm add @aimachine/browser puppeteer
+# or: npm install @aimachine/browser puppeteer
 ```
 
-**Node 20+.** Runtime depends on **`puppeteer-core`** only.
+**Node 20+.** **`puppeteer` is a peer dependency** — install it next to this package so types and `launch` / `Page` resolve.
 
 ## Usage
 
@@ -24,7 +25,7 @@ pnpm add @aimachine/browser
 
 ```ts
 import { generateText, stepCountIs } from "ai";
-import { launch } from "puppeteer-core";
+import { launch } from "puppeteer";
 import { createBrowserTools, Session } from "@aimachine/browser";
 
 const browser = await launch({ headless: true });
@@ -55,7 +56,7 @@ Individual factories (`createGotoTool`, `createClickTool`, …) are available if
 
 `getScreenshot` returns base64 JPEG and **`toModelOutput`** for multimodal models.
 
-**Dev in this repo:** `puppeteer` is a devDependency for tests; with pnpm 10.1+, you may need `pnpm approve-builds --all` for Puppeteer’s postinstall.
+**Install note:** with pnpm 10.1+, you may need `pnpm approve-builds --all` so Puppeteer’s postinstall can download Chromium.
 
 ## Scripts
 

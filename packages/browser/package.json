@@ -1,7 +1,7 @@
 {
   "name": "@aimachine/browser",
-  "version": "1.0.1",
-  "description": "puppeteer-core browser tools for the Vercel AI SDK (bring your own Chromium)",
+  "version": "2.0.0",
+  "description": "Puppeteer browser tools for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
   "sideEffects": false,
@@ -43,17 +43,17 @@
     "ai-sdk",
     "vercel-ai-sdk",
     "openrouter",
-    "puppeteer-core",
     "puppeteer",
     "browser-automation",
     "tools",
-    "agent",
-    "playwright-alternative"
+    "agent"
   ],
   "dependencies": {
     "ai": "^6.0.180",
-    "puppeteer-core": "^24.43.1",
     "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "puppeteer": "^24.0.0"
   },
   "devDependencies": {
     "@openrouter/ai-sdk-provider": "^2.9.0",
