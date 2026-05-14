@@ -1,0 +1,49 @@
+# Publishes to npm using Trusted Publishing (OIDC). No NPM_TOKEN secret.
+# Prerequisites: https://docs.npmjs.com/trusted-publishers/
+#   - On npm: package Settings → Trusted publishing → GitHub Actions
+#   - Match org/user, repo, and this filename exactly (e.g. publish.yml)
+# pnpm runs npm for publish; npm CLI 11.5.1+ is required for OIDC.
+
+name: Publish Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # https://github.com/pnpm/action-setup
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      # Bundled npm may be <11.5.1; OIDC trusted publishing needs npm >=11.5.1
+      - name: Use npm with OIDC support
+        run: npm install -g npm@^11.5.1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Publish to npm
+        run: pnpm publish --no-git-checks
