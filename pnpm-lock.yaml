@@ -13,9 +13,9 @@ importers:
       ai:
         specifier: ^6.0.180
         version: 6.0.180(zod@4.4.3)
-      puppeteer:
+      puppeteer-core:
         specifier: ^24.43.1
-        version: 24.43.1(typescript@6.0.3)
+        version: 24.43.1
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -29,6 +29,9 @@ importers:
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
+      puppeteer:
+        specifier: ^24.43.1
+        version: 24.43.1(typescript@6.0.3)
       tsdown:
         specifier: ^0.17.4
         version: 0.17.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(typescript@6.0.3)

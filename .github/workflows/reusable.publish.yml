@@ -1,0 +1,45 @@
+# Reusable: build, test, and publish one workspace package with pnpm + npm OIDC.
+# Callers must set permissions (id-token: write) for Trusted Publishing.
+#
+# npm Trusted Publishing: register the caller workflow (e.g. publish.browser.yml) on npm.
+
+name: Reusable publish package
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        description: "pnpm workspace package name (e.g. @aitoolkit/browser)"
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+
+      # https://github.com/pnpm/action-setup — version from root package.json packageManager
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+          run_install: |
+            - args: [--frozen-lockfile]
+
+      - name: Build
+        run: pnpm --filter '${{ inputs.package }}' run build
+
+      - name: Test
+        run: pnpm --filter '${{ inputs.package }}' test
+
+      - name: Publish to npm
+        run: pnpm --filter '${{ inputs.package }}' publish --no-git-checks
