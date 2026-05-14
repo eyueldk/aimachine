@@ -21,7 +21,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   afterAll(async () => {
-    session.close();
+    await session.close();
     await browser.close();
   });
 

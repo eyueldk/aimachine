@@ -1,6 +1,6 @@
 {
   "name": "@aimachine/browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "puppeteer-core browser tools for the Vercel AI SDK (bring your own Chromium)",
   "license": "MIT",
   "author": "Eyuel G. Molla",

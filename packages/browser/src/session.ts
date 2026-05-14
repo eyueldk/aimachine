@@ -17,10 +17,13 @@ export class Session {
     this.consoleInspector.start();
   }
 
-  close() {
+  async close(): Promise<void> {
     if (this._closed) return;
     this._closed = true;
     this.networkInspector.stop();
     this.consoleInspector.stop();
+    if (!this.page.isClosed()) {
+      await this.page.close();
+    }
   }
 }

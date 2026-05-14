@@ -16,7 +16,7 @@ describe.skipIf(!hasOpenRouterKey)("Agent with browser tools", () => {
   let session: Session | undefined;
 
   afterAll(async () => {
-    session?.close();
+    await session?.close();
     await browser?.close();
   });
 
