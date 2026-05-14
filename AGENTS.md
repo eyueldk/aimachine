@@ -11,6 +11,6 @@
 ## Learned Workspace Facts
 
 - Private monorepo root package is `aimachine`; the browser library is `@aimachine/browser` in `packages/browser`.
-- Package and docs use GitHub `https://github.com/aimachine/aimachine` for repository, issues, and homepage links.
+- Package and docs use GitHub `https://github.com/eyueldk/aimachine` for repository, issues, and homepage links.
 - `.github/workflows/publish.browser.yml` runs on `main` when `packages/browser/**` changes (and via `workflow_dispatch`); it calls `.github/workflows/reusable.publish.yml` with package `@aimachine/browser`.
 - Reusable publish runs checkout, Node 24, `pnpm/action-setup@v6` with cache and frozen-lockfile install, then `build`, `test`, and `publish --no-git-checks` for the filtered package.

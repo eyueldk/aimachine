@@ -5,7 +5,7 @@
 
 **puppeteer-core** tools for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). No bundled browser—pass `executablePath` (or `channel`) to `launch`, or add [`puppeteer`](https://www.npmjs.com/package/puppeteer) in your app if you want Chromium downloads.
 
-**Repository:** [github.com/aimachine/aimachine](https://github.com/aimachine/aimachine) (`packages/browser`)
+**Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/browser`)
 
 ## Install
 

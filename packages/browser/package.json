@@ -24,13 +24,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aimachine/aimachine.git",
+    "url": "https://github.com/eyueldk/aimachine.git",
     "directory": "packages/browser"
   },
   "bugs": {
-    "url": "https://github.com/aimachine/aimachine/issues"
+    "url": "https://github.com/eyueldk/aimachine/issues"
   },
-  "homepage": "https://github.com/aimachine/aimachine/tree/main/packages/browser#readme",
+  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/browser#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm build",
