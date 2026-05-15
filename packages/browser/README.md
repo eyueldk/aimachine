@@ -1,11 +1,21 @@
 # @aimachine/browser
 
 [![npm](https://img.shields.io/npm/v/@aimachine/browser)](https://www.npmjs.com/package/@aimachine/browser)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
-[**Puppeteer**](https://www.npmjs.com/package/puppeteer) tools for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). Types and tooling align with the `puppeteer` package (it bundles Chromium via install scripts unless you configure otherwise).
+**Version:** `2.1.0` (also in `package.json` `"version"`).
+
+**Puppeteer-backed browser toolkit** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createBrowserToolkit({ page })`** returns **`{ tools, hint, session }`**. Types line up with the **`puppeteer`** package (Chromium install scripts unless you configure otherwise).
 
 **Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/browser`)
+
+## Requirements
+
+| | |
+| --- | --- |
+| **Node** | 20+ (`engines.node`) |
+| **Runtime deps** | `ai` ^6, `zod` ^4 |
+| **Peer** | `puppeteer` ^24 (install next to this package for `Page` / `launch` types) |
 
 ## Install
 
@@ -14,30 +24,27 @@ pnpm add @aimachine/browser puppeteer
 # or: npm install @aimachine/browser puppeteer
 ```
 
-**Node 20+.** **`puppeteer` is a peer dependency** — install it next to this package so types and `launch` / `Page` resolve.
-
 ## Usage
 
 1. `launch` and open a `Page`.
-2. `new Session({ page })` (enables console + network capture).
-3. `createBrowserTools({ session })` → pass as `tools` to the AI SDK.
-4. `await session.close()` (stops inspectors and closes the page), then `await browser.close()`.
+2. **`createBrowserToolkit({ page })`** — creates a **`Session`** (console + network capture), then returns **`{ tools, hint, session }`**. Pass **`tools`** and **`hint`** into the AI SDK.
+3. **`await session.close()`** (stops inspectors and closes the page), then **`await browser.close()`**.
 
 ```ts
 import { generateText, stepCountIs } from "ai";
 import { launch } from "puppeteer";
-import { createBrowserTools, Session } from "@aimachine/browser";
+import { createBrowserToolkit } from "@aimachine/browser";
 
 const browser = await launch({ headless: true });
 const page = await browser.newPage();
-const session = new Session({ page });
-const tools = createBrowserTools({ session });
+const { tools, hint, session } = createBrowserToolkit({ page });
 
 try {
   await generateText({
     model: yourLanguageModel,
     tools,
     stopWhen: stepCountIs(10),
+    system: `You control a browser tab.\n\n${hint}`,
     prompt: "Open https://example.com and return the visible h1 text.",
   });
 } finally {
@@ -46,7 +53,7 @@ try {
 }
 ```
 
-Bring your own model provider (e.g. `@ai-sdk/openai`). Use **`createBrowserTools` once per `Session`**.
+Bring your own model provider (e.g. `@ai-sdk/openai`). Use **`createBrowserToolkit` once per `Page`** you automate. Import **`Session`** if you construct it yourself for **`createBrowserTools`**. **`createBrowserTools`** is still exported if you only need the raw tool map.
 
 ### Tools
 
@@ -60,8 +67,12 @@ Individual factories (`createGotoTool`, `createClickTool`, …) are available if
 
 ## Scripts
 
-`pnpm build` · `pnpm check` · `pnpm test` (agent tests need `OPENROUTER_API_KEY` in `.env`).
+`pnpm build` · `pnpm check` (`tsc --noEmit`) · `pnpm test` (agent tests need `OPENROUTER_API_KEY` in `.env`). **`prepublishOnly`** runs `pnpm check && pnpm build` before publish.
+
+## Publishing
+
+CI publishes this package when **`packages/browser/**`** changes on **`main`** (see [`.github/workflows/publish.browser.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.browser.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT — see [repository LICENSE](https://github.com/eyueldk/aimachine/blob/main/LICENSE).

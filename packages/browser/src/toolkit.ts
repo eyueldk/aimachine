@@ -1,32 +1,29 @@
-import type { Session } from "./session";
-import { createGotoTool } from "./tools/goto-tool";
-import { createClickTool } from "./tools/click-tool";
-import { createEvaluateTool } from "./tools/evaluate-tool";
-import { createGetCookiesTool } from "./tools/get-cookies-tool";
-import { createInspectHTMLTool } from "./tools/inspect-html-tool";
-import { createGetScreenshotTool } from "./tools/get-screenshot-tool";
-import { createInspectConsoleTool } from "./tools/inspect-console-tool";
-import { createInspectNetworkTool } from "./tools/inspect-network-tool";
-import { createTypeTool } from "./tools/type-tool";
-import { createViewPageTool } from "./tools/view-page-tool";
+import type { Page } from "puppeteer";
+import { Session } from "./session";
+import { BROWSER_TOOLKIT_HINT } from "./hint";
+import { createBrowserTools } from "./tools";
+
+export type BrowserTools = ReturnType<typeof createBrowserTools>;
+
+export type BrowserToolkit = {
+  tools: BrowserTools;
+  hint: string;
+  session: Session;
+};
+
+export interface CreateBrowserToolkitOptions {
+  page: Page;
+}
 
 /**
- * Builds browser {@link https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling tools}
- * for the Vercel AI SDK (`generateText`, `streamText`, `ToolLoopAgent`, etc.) from a {@link Session}.
- * Inspectors are already active on the session from construction.
+ * Primary entry point: constructs a {@link Session} for the page, AI SDK `tools`, and a
+ * `hint` for your system prompt. Pass `tools` / `hint` into `generateText` (etc.); call
+ * `await session.close()` when finished (then close the browser if you own it).
  */
-export function createBrowserTools({ session }: { session: Session }) {
-  const tools = {
-    goto: createGotoTool({ session }),
-    click: createClickTool({ session }),
-    type: createTypeTool({ session }),
-    evaluate: createEvaluateTool({ session }),
-    inspectConsole: createInspectConsoleTool({ session }),
-    getCookies: createGetCookiesTool({ session }),
-    viewPage: createViewPageTool({ session }),
-    inspectHTML: createInspectHTMLTool({ session }),
-    getScreenshot: createGetScreenshotTool({ session }),
-    inspectNetwork: createInspectNetworkTool({ session }),
-  };
-  return { ...tools } as const;
+export function createBrowserToolkit(
+  options: CreateBrowserToolkitOptions,
+): BrowserToolkit {
+  const session = new Session({ page: options.page });
+  const tools = createBrowserTools({ session });
+  return { tools, hint: BROWSER_TOOLKIT_HINT, session };
 }

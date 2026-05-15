@@ -1,7 +1,7 @@
 {
-  "name": "@aimachine/browser",
-  "version": "2.1.0",
-  "description": "Puppeteer browser toolkit (AI SDK tools + session) for the Vercel AI SDK",
+  "name": "@aimachine/todos",
+  "version": "1.1.0",
+  "description": "Task-list tools (writeTodos, viewTodos) for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
   "sideEffects": false,
@@ -24,12 +24,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/eyueldk/aimachine.git",
-    "directory": "packages/browser"
+    "directory": "packages/todos"
   },
   "bugs": {
     "url": "https://github.com/eyueldk/aimachine/issues"
   },
-  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/browser#readme",
+  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/todos#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm check && pnpm build",
@@ -38,21 +38,16 @@
   },
   "keywords": [
     "aimachine",
-    "@aimachine/browser",
+    "@aimachine/todos",
     "ai-sdk",
     "vercel-ai-sdk",
-    "openrouter",
-    "puppeteer",
-    "browser-automation",
-    "tools",
-    "agent"
+    "todos",
+    "task-list",
+    "agents"
   ],
   "dependencies": {
     "ai": "^6.0.180",
     "zod": "^4.4.3"
-  },
-  "peerDependencies": {
-    "puppeteer": "^24.0.0"
   },
   "devDependencies": {
     "@openrouter/ai-sdk-provider": "^2.9.0",
@@ -61,8 +56,7 @@
     "tsdown": "^0.17.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.6",
-    "puppeteer": "^24.43.1"
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=20"

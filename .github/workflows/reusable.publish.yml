@@ -35,6 +35,9 @@ jobs:
           run_install: |
             - args: [--frozen-lockfile]
 
+      - name: Check (tsc)
+        run: pnpm --filter '${{ inputs.package }}' run check
+
       - name: Build
         run: pnpm --filter '${{ inputs.package }}' run build
 

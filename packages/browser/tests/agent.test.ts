@@ -3,15 +3,14 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { generateText, stepCountIs } from "ai";
 import puppeteer, { type Browser } from "puppeteer";
 import { afterAll, describe, expect, test } from "vitest";
-import { createBrowserTools, Session } from "../src/index";
+import { createBrowserToolkit, Session } from "../src/index";
 
-const hasOpenRouterKey =
-  typeof process.env.OPENROUTER_API_KEY === "string" &&
-  process.env.OPENROUTER_API_KEY.trim().length > 0;
-
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_MODEL = "google/gemini-2.5-flash-lite";
 
-describe.skipIf(!hasOpenRouterKey)("Agent with browser tools", () => {
+describe.skipIf(
+  !process.env.OPENROUTER_API_KEY
+)("Agent with browser tools", () => {
   let browser: Browser | undefined;
   let session: Session | undefined;
 
@@ -28,11 +27,12 @@ describe.skipIf(!hasOpenRouterKey)("Agent with browser tools", () => {
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
       const page = await browser.newPage();
-      session = new Session({ page });
-      const tools = createBrowserTools({ session });
+      const { tools, hint, session: toolkitSession } =
+        createBrowserToolkit({ page });
+      session = toolkitSession;
 
       const openrouter = createOpenRouter({
-        apiKey: process.env.OPENROUTER_API_KEY!,
+        apiKey: OPENROUTER_API_KEY!,
         appName: "@aimachine/browser",
       });
 
@@ -40,6 +40,7 @@ describe.skipIf(!hasOpenRouterKey)("Agent with browser tools", () => {
         model: openrouter.chat(OPENROUTER_MODEL),
         tools,
         stopWhen: stepCountIs(15),
+        system: `You are a browser automation assistant.\n\n${hint}`,
         prompt: `Use the goto tool to open https://example.com in the browser.
 Then briefly describe what you see on the page in your final answer.`,
       });

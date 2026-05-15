@@ -1,5 +1,12 @@
 export { Session } from "./session";
-export { createBrowserTools } from "./toolkit";
+export { BROWSER_TOOLKIT_HINT } from "./hint";
+export {
+  createBrowserToolkit,
+  type BrowserToolkit,
+  type BrowserTools,
+  type CreateBrowserToolkitOptions,
+} from "./toolkit";
+export { createBrowserTools } from "./tools";
 export { createGotoTool } from "./tools/goto-tool";
 export { createClickTool } from "./tools/click-tool";
 export { createTypeTool } from "./tools/type-tool";

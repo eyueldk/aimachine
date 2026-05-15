@@ -4,9 +4,9 @@
   "description": "Monorepo for @aimachine packages",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -F @aimachine/browser build",
-    "check": "pnpm -F @aimachine/browser check",
-    "test": "pnpm -F @aimachine/browser test"
+    "build": "pnpm --filter \"./packages/**\" run build",
+    "check": "pnpm --filter \"./packages/**\" run check",
+    "test": "pnpm -F @aimachine/browser test && pnpm -F @aimachine/todos test"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

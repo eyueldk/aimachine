@@ -1,14 +1,19 @@
 import { describe, test, expect, beforeAll, afterAll } from "vitest";
 import puppeteer, { type Browser, type Page } from "puppeteer";
-import { createBrowserTools, Session } from "../src/index";
+import {
+  BROWSER_TOOLKIT_HINT,
+  createBrowserToolkit,
+  type BrowserToolkit,
+  type BrowserTools,
+} from "../src/index";
 
 const toolOpts = { toolCallId: "test", messages: [] } as const;
 
 describe("Browser Tools Integration Tests", () => {
   let browser: Browser;
   let page: Page;
-  let session: Session;
-  let tools: ReturnType<typeof createBrowserTools>;
+  let kit: BrowserToolkit;
+  let tools: BrowserTools;
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
@@ -16,13 +21,19 @@ describe("Browser Tools Integration Tests", () => {
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     page = await browser.newPage();
-    session = new Session({ page });
-    tools = createBrowserTools({ session });
+    kit = createBrowserToolkit({ page });
+    tools = kit.tools;
   });
 
   afterAll(async () => {
-    await session.close();
+    await kit.session.close();
     await browser.close();
+  });
+
+  test("createBrowserToolkit returns tools, hint, and session for the page", () => {
+    expect(kit.tools.goto).toBeDefined();
+    expect(kit.hint).toBe(BROWSER_TOOLKIT_HINT);
+    expect(kit.session.page).toBe(page);
   });
 
   test("goto tool should navigate to a URL", async () => {
