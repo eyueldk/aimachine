@@ -1,4 +1,4 @@
-export { TodoState } from "./state";
+export type { TodoState } from "./state";
 export {
   createWriteTodosTool,
   WRITE_TODOS_DESCRIPTION,

@@ -19,5 +19,5 @@
 - `@aimachine/browser` `Session.close()` is async, stops inspectors, and closes the page; use `await session.close()` in teardown.
 - Agent tests under `packages/browser` and `packages/todos` need `OPENROUTER_API_KEY` set in the repo root `.env` (see package READMEs; Vitest loads that file).
 - Root `pnpm test` runs `@aimachine/browser` then `@aimachine/todos` in sequence so parallel Vitest plus Puppeteer does not time out.
-- `createBrowserToolkit` takes `{ page }`, constructs a `Session`, and returns `{ tools, hint, session }`. `createTodosToolkit` returns `{ tools, hint, state }` with `TodoState` on `state`. Merge `tools` and append `hint` to system/instructions.
+- `createBrowserToolkit` takes `{ page }`, constructs a `Session`, and returns `{ tools, hint, session }`. `createTodosToolkit` returns `{ tools, hint, state }` where `state` is a serializable `TodoState` (`{ todos }`). Merge `tools` and append `hint` to system/instructions.
 - `@aimachine/todos` uses camelCase AI SDK tool names (e.g. `writeTodos`, `viewTodos`) and todo status literals `pending`, `inProgress`, and `completed` (not snake_case).

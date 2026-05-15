@@ -16,8 +16,8 @@ export type CreateTodosToolkitOptions = CreateTodoToolsOptions;
 
 /**
  * Primary entry point: AI SDK `tools`, a `hint` string for your system prompt, and the
- * mutable `TodoState` as `state`. Pass `tools` / `hint` into `generateText` (etc.); read
- * `state.todos` after the run.
+ * serializable `TodoState` (`{ todos }`) as `state`. Pass `tools` / `hint` into `generateText`
+ * (etc.); read or persist `state.todos` after the run.
  */
 export function createTodosToolkit(
   options: CreateTodosToolkitOptions,

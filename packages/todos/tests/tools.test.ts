@@ -2,15 +2,15 @@ import { describe, expect, test } from "vitest";
 import {
   createTodosToolkit,
   createTodoTools,
-  TodoState,
   TODOS_HINT,
+  type TodoState,
 } from "../src/index";
 
 const toolOpts = { toolCallId: "test", messages: [] } as const;
 
 describe("writeTodos tool", () => {
   test("replaces the full todo list on execute", async () => {
-    const state = new TodoState();
+    const state: TodoState = { todos: [] };
     const { writeTodos } = createTodoTools({ state });
 
     const payload = {
@@ -34,7 +34,7 @@ describe("writeTodos tool", () => {
   });
 
   test("second call replaces previous list", async () => {
-    const state = new TodoState();
+    const state: TodoState = { todos: [] };
     const { writeTodos } = createTodoTools({ state });
 
     await writeTodos.execute!(
@@ -57,7 +57,7 @@ describe("writeTodos tool", () => {
 
 describe("viewTodos tool", () => {
   test("returns markdown for empty list", async () => {
-    const state = new TodoState();
+    const state: TodoState = { todos: [] };
     const { viewTodos } = createTodoTools({ state });
 
     const result = await viewTodos.execute!(
@@ -71,7 +71,7 @@ describe("viewTodos tool", () => {
   });
 
   test("returns markdown list after writeTodos", async () => {
-    const state = new TodoState();
+    const state: TodoState = { todos: [] };
     const { writeTodos, viewTodos } = createTodoTools({ state });
 
     await writeTodos.execute!(
@@ -97,7 +97,7 @@ describe("viewTodos tool", () => {
 
 describe("createTodosToolkit", () => {
   test("returns tools, hint, and state", () => {
-    const state = new TodoState();
+    const state: TodoState = { todos: [] };
     const kit = createTodosToolkit({ state });
     expect(kit.tools.writeTodos).toBeDefined();
     expect(kit.tools.viewTodos).toBeDefined();

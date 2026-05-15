@@ -7,7 +7,7 @@ export interface CreateTodoToolsOptions {
 }
 
 /**
- * Builds AI SDK tools from a {@link TodoState}. Merge with your other `tools` when calling
+ * Builds AI SDK tools from a {@link TodoState} object (`{ todos }`). Merge with your other `tools` when calling
  * `generateText` / `streamText` / `ToolLoopAgent`.
  * @see https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling
  */

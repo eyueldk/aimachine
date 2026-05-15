@@ -5,7 +5,7 @@
 
 **Version:** `1.1.0` (also in `package.json` `"version"`).
 
-**`writeTodos`** and **`viewTodos`** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). **`createTodosToolkit({ state })`** returns **`{ tools, hint, state }`** — merge **`tools`**, append **`hint`** (`TODOS_HINT`) to your system prompt, and read **`state.todos`** (`TodoState`). `writeTodos` replaces the whole list; **`viewTodos`** returns a Markdown bullet list (read-only). Status values: **`pending`**, **`inProgress`**, **`completed`**.
+**`writeTodos`** and **`viewTodos`** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). **`createTodosToolkit({ state })`** returns **`{ tools, hint, state }`** — merge **`tools`**, append **`hint`** (`TODOS_HINT`) to your system prompt, and read **`state.todos`**. **`state`** is a plain **`TodoState`** object (`{ todos: Todo[] }`); `writeTodos` replaces **`state.todos`**. **`viewTodos`** returns a Markdown bullet list (read-only). Status values: **`pending`**, **`inProgress`**, **`completed`**.
 
 **Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/todos`)
 
@@ -24,14 +24,14 @@ pnpm add @aimachine/todos
 
 ## Usage
 
-1. Create a **`TodoState`** (mutable todo list for one agent run / session).
-2. **`createTodosToolkit({ state })`** → `{ tools, hint, state }`. Pass **`tools`** and **`hint`** into the AI SDK. **`state`** is the same **`TodoState`** instance you passed in—read **`state.todos`** after the run (or use your local variable).
+1. Hold todo data in a **`TodoState`** object: **`{ todos: [] }`** (or hydrate from JSON).
+2. **`createTodosToolkit({ state })`** → `{ tools, hint, state }`. Pass **`tools`** and **`hint`** into the AI SDK. **`state`** is the same object you passed in—read **`state.todos`** after the run (or use your local variable).
 
 ```ts
 import { generateText, stepCountIs } from "ai";
-import { createTodosToolkit, TodoState } from "@aimachine/todos";
+import { createTodosToolkit, type TodoState } from "@aimachine/todos";
 
-const state = new TodoState();
+const state: TodoState = { todos: [] };
 const { tools, hint } = createTodosToolkit({ state });
 
 await generateText({

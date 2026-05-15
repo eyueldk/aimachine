@@ -2,7 +2,7 @@ import "dotenv/config";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { generateText, stepCountIs } from "ai";
 import { describe, expect, test } from "vitest";
-import { createTodosToolkit, TodoState } from "../src/index";
+import { createTodosToolkit, type TodoState } from "../src/index";
 
 const hasOpenRouterKey =
   typeof process.env.OPENROUTER_API_KEY === "string" &&
@@ -14,7 +14,7 @@ describe.skipIf(!hasOpenRouterKey)("Agent with todo tools", () => {
   test(
     "uses writeTodos to record a short task list",
     async () => {
-      const state = new TodoState();
+      const state: TodoState = { todos: [] };
       const { tools, hint } = createTodosToolkit({ state });
 
       const openrouter = createOpenRouter({

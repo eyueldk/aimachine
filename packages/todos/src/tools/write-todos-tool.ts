@@ -1,6 +1,6 @@
 import { tool } from "ai";
 import { z } from "zod";
-import { TodoState } from "../state";
+import type { TodoState } from "../state";
 
 /** Bundled AI SDK tool description for `writeTodos`. */
 export const WRITE_TODOS_DESCRIPTION = `Use this tool to create and manage a structured task list for your current work session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.
@@ -87,7 +87,7 @@ export function createWriteTodosTool(options: CreateWriteTodosToolOptions) {
       todos: z.array(TodoSchema).describe("List of todo items to update"),
     }),
     execute: async ({ todos }) => {
-      options.state.replace(todos);
+      options.state.todos = todos.map((t) => ({ ...t }));
       return `Updated todo list to ${JSON.stringify(todos)}`;
     },
   });

@@ -1,20 +1,9 @@
 import type { Todo } from "./tools/write-todos-tool";
 
 /**
- * Mutable todo list for one agent run. Each `writeTodos` call replaces the full list in this `TodoState`.
+ * Serializable todo list for one agent run. Mutate **`todos`** (e.g. `writeTodos` replaces
+ * the array contents). Safe to `JSON.stringify` / persist when your `Todo` payloads are plain data.
  */
-export class TodoState {
-  private _todos: Todo[] = [];
-
-  get todos(): readonly Todo[] {
-    return this._todos;
-  }
-
-  replace(todos: Todo[]): void {
-    this._todos = todos.map((t) => ({ ...t }));
-  }
-
-  clear(): void {
-    this._todos = [];
-  }
-}
+export type TodoState = {
+  todos: Todo[];
+};
