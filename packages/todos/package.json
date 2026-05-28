@@ -1,5 +1,5 @@
 {
-  "name": "@aimachine/todos",
+  "name": "@eyueldk/aisdk-toolkit-todos",
   "version": "1.1.0",
   "description": "Task-list tools (writeTodos, viewTodos) for the Vercel AI SDK",
   "license": "MIT",
@@ -37,8 +37,9 @@
     "test": "vitest run"
   },
   "keywords": [
-    "aimachine",
-    "@aimachine/todos",
+    "eyueldk",
+    "aisdk-toolkit",
+    "@eyueldk/aisdk-toolkit-todos",
     "ai-sdk",
     "vercel-ai-sdk",
     "todos",

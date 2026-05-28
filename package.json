@@ -1,12 +1,12 @@
 {
   "name": "aimachine",
   "private": true,
-  "description": "Monorepo for @aimachine packages",
+  "description": "Monorepo for @eyueldk aisdk-toolkit packages",
   "license": "MIT",
   "scripts": {
     "build": "pnpm --filter \"./packages/**\" run build",
     "check": "pnpm --filter \"./packages/**\" run check",
-    "test": "pnpm -F @aimachine/browser test && pnpm -F @aimachine/todos test && pnpm -F @aimachine/filesystem test"
+    "test": "pnpm -F @eyueldk/aisdk-toolkit-browser test && pnpm -F @eyueldk/aisdk-toolkit-todos test && pnpm -F @eyueldk/aisdk-toolkit-filesystem test"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

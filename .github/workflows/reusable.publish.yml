@@ -9,7 +9,7 @@ on:
   workflow_call:
     inputs:
       package:
-        description: "pnpm workspace package name (e.g. @aimachine/browser)"
+        description: "pnpm workspace package name (e.g. @eyueldk/aisdk-toolkit-browser)"
         required: true
         type: string
 

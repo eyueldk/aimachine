@@ -1,5 +1,5 @@
 {
-  "name": "@aimachine/filesystem",
+  "name": "@eyueldk/aisdk-toolkit-filesystem",
   "version": "0.1.0",
   "description": "FileSystem AI SDK tools with pluggable adapters for the Vercel AI SDK",
   "license": "MIT",
@@ -37,8 +37,9 @@
     "test": "vitest run"
   },
   "keywords": [
-    "aimachine",
-    "@aimachine/filesystem",
+    "eyueldk",
+    "aisdk-toolkit",
+    "@eyueldk/aisdk-toolkit-filesystem",
     "ai-sdk",
     "vercel-ai-sdk",
     "filesystem",

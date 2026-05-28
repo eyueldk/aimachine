@@ -1,5 +1,5 @@
 {
-  "name": "@aimachine/browser",
+  "name": "@eyueldk/aisdk-toolkit-browser",
   "version": "2.1.0",
   "description": "Puppeteer browser toolkit (AI SDK tools + session) for the Vercel AI SDK",
   "license": "MIT",
@@ -37,8 +37,9 @@
     "test": "vitest run"
   },
   "keywords": [
-    "aimachine",
-    "@aimachine/browser",
+    "eyueldk",
+    "aisdk-toolkit",
+    "@eyueldk/aisdk-toolkit-browser",
     "ai-sdk",
     "vercel-ai-sdk",
     "puppeteer",

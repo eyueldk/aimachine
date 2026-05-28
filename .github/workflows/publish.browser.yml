@@ -1,9 +1,9 @@
-# Publishes @aimachine/browser when the package changes on main.
+# Publishes @eyueldk/aisdk-toolkit-browser when the package changes on main.
 #
 # npm Trusted Publishing (OIDC): configure this workflow filename on npm for the package:
 #   https://docs.npmjs.com/trusted-publishers/
 
-name: Publish @aimachine/browser
+name: Publish @eyueldk/aisdk-toolkit-browser
 
 on:
   push:
@@ -20,4 +20,4 @@ jobs:
   publish:
     uses: ./.github/workflows/reusable.publish.yml
     with:
-      package: "@aimachine/browser"
+      package: "@eyueldk/aisdk-toolkit-browser"

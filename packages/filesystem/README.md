@@ -1,6 +1,6 @@
-# @aimachine/filesystem
+# @eyueldk/aisdk-toolkit-filesystem
 
-[![npm](https://img.shields.io/npm/v/@aimachine/filesystem)](https://www.npmjs.com/package/@aimachine/filesystem)
+[![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-filesystem)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-filesystem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
 **Version:** `0.1.0` (also in `package.json` `"version"`).
@@ -25,7 +25,7 @@ Adapter-facing paths are POSIX (`src/a.ts`). **`resolvePath`** normalizes paths 
 ## Install
 
 ```bash
-pnpm add @aimachine/filesystem
+pnpm add @eyueldk/aisdk-toolkit-filesystem
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ import { generateText, stepCountIs } from "ai";
 import {
   createFileSystemToolkit,
   MemoryFileSystem,
-} from "@aimachine/filesystem";
+} from "@eyueldk/aisdk-toolkit-filesystem";
 
 const adapter = await MemoryFileSystem.create({
   initialFiles: { "README.md": "# hi" },
@@ -75,7 +75,7 @@ const { tools, hint } = createFileSystemToolkit({
 | **DockerFileSystem** | `await DockerFileSystem.create({ container, root?, docker? })` | Lists via in-container **`find`** (Alpine BusyBox or GNU); read/write via archive APIs |
 
 ```ts
-import { LocalFileSystem, DockerFileSystem } from "@aimachine/filesystem";
+import { LocalFileSystem, DockerFileSystem } from "@eyueldk/aisdk-toolkit-filesystem";
 
 const disk = await LocalFileSystem.create({ root: "/path/to/workspace" });
 const container = await DockerFileSystem.create({
@@ -102,7 +102,7 @@ Helpers: **`enforcePermissions`**, **`evaluatePermission`**, **`isOperationAllow
 
 ## Publishing
 
-CI publishes this package when **`packages/filesystem/**`** changes on **`main`** (see [`.github/workflows/publish.filesystem.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.filesystem.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow on the **`@aimachine/filesystem`** package.
+CI publishes this package when **`packages/filesystem/**`** changes on **`main`** (see [`.github/workflows/publish.filesystem.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.filesystem.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow on the **`@eyueldk/aisdk-toolkit-filesystem`** package.
 
 ## License
 

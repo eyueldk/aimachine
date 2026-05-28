@@ -1,6 +1,6 @@
-# @aimachine/browser
+# @eyueldk/aisdk-toolkit-browser
 
-[![npm](https://img.shields.io/npm/v/@aimachine/browser)](https://www.npmjs.com/package/@aimachine/browser)
+[![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-browser)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-browser)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
 **Version:** `2.1.0` (also in `package.json` `"version"`).
@@ -20,8 +20,8 @@
 ## Install
 
 ```bash
-pnpm add @aimachine/browser puppeteer
-# or: npm install @aimachine/browser puppeteer
+pnpm add @eyueldk/aisdk-toolkit-browser puppeteer
+# or: npm install @eyueldk/aisdk-toolkit-browser puppeteer
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ pnpm add @aimachine/browser puppeteer
 ```ts
 import { generateText, stepCountIs } from "ai";
 import { launch } from "puppeteer";
-import { createBrowserToolkit } from "@aimachine/browser";
+import { createBrowserToolkit } from "@eyueldk/aisdk-toolkit-browser";
 
 const browser = await launch({ headless: true });
 const page = await browser.newPage();

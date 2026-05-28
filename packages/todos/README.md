@@ -1,6 +1,6 @@
-# @aimachine/todos
+# @eyueldk/aisdk-toolkit-todos
 
-[![npm](https://img.shields.io/npm/v/@aimachine/todos)](https://www.npmjs.com/package/@aimachine/todos)
+[![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-todos)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-todos)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
 **Version:** `1.1.0` (also in `package.json` `"version"`).
@@ -19,7 +19,7 @@
 ## Install
 
 ```bash
-pnpm add @aimachine/todos
+pnpm add @eyueldk/aisdk-toolkit-todos
 ```
 
 ## Usage
@@ -29,7 +29,7 @@ pnpm add @aimachine/todos
 
 ```ts
 import { generateText, stepCountIs } from "ai";
-import { createTodosToolkit, type TodoState } from "@aimachine/todos";
+import { createTodosToolkit, type TodoState } from "@eyueldk/aisdk-toolkit-todos";
 
 const state: TodoState = { todos: [] };
 const { tools, hint } = createTodosToolkit({ state });
