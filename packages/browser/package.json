@@ -1,6 +1,6 @@
 {
   "name": "@eyueldk/aisdk-toolkit-browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Playwright browser toolkit (AI SDK tools) for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
@@ -53,7 +53,9 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@openrouter/ai-sdk-provider": "^2.9.0",
     "@types/node": "^25.7.0",
+    "dotenv": "^17.2.1",
     "tsdown": "^0.17.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",

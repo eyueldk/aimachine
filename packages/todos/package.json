@@ -1,6 +1,6 @@
 {
   "name": "@eyueldk/aisdk-toolkit-todos",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Task-list tools (writeTodos, readTodos) for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
@@ -51,7 +51,9 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@openrouter/ai-sdk-provider": "^2.9.0",
     "@types/node": "^25.7.0",
+    "dotenv": "^17.2.1",
     "tsdown": "^0.17.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",

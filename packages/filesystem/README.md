@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-filesystem)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-filesystem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
-**Version:** `1.0.0` (also in `package.json` `"version"`).
+**Version:** `1.0.1` (also in `package.json` `"version"`).
 
 Pluggable **filesystem tools** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createFileSystemToolkit({ adapter, permissions? })`** returns **`{ tools, hint, state }`**. Pass **`tools`** and **`hint`** (`FILE_SYSTEM_HINT`) into the AI SDK. **`state`** holds the same **`adapter`** and optional **`permissions`** you passed in.
 
@@ -99,6 +99,8 @@ Helpers: **`enforcePermissions`**, **`evaluatePermission`**, **`isOperationAllow
 ## Scripts
 
 `pnpm build` · `pnpm check` (`tsc --noEmit`) · `pnpm test` (when Docker is available, Docker adapter tests use **Testcontainers** to start **`alpine`**; otherwise they are skipped). **`prepublishOnly`** runs `pnpm check && pnpm build` before publish.
+
+Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aimachine/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent`.
 
 ## Publishing
 

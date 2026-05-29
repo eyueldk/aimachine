@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-todos)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-todos)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
-**Version:** `1.2.0` (also in `package.json` `"version"`).
+**Version:** `1.2.1` (also in `package.json` `"version"`).
 
 **`writeTodos`** and **`readTodos`** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). **`createTodosToolkit({ state })`** returns **`{ tools, hint, state }`** — merge **`tools`**, append **`hint`** (`TODOS_HINT`) to your system prompt, and read **`state.todos`**. **`state`** is a plain **`TodoState`** object (`{ todos: Todo[] }`); `writeTodos` replaces **`state.todos`**. **`readTodos`** returns a Markdown bullet list (read-only). Status values: **`pending`**, **`in_progress`**, **`completed`**.
 
@@ -60,6 +60,8 @@ console.log(state.todos);
 ## Scripts
 
 `pnpm build` · `pnpm check` (`tsc --noEmit`) · `pnpm test`. **`prepublishOnly`** runs `pnpm check && pnpm build` before publish.
+
+Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aimachine/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent`.
 
 ## Publishing
 

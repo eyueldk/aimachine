@@ -1,6 +1,6 @@
 {
   "name": "@eyueldk/aisdk-toolkit-filesystem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FileSystem AI SDK tools with pluggable adapters for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
@@ -57,7 +57,9 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@openrouter/ai-sdk-provider": "^2.9.0",
     "@types/dockerode": "4.0.1",
+    "dotenv": "^17.2.1",
     "@types/node": "^25.7.0",
     "@types/tar-stream": "3.1.4",
     "testcontainers": "^12.0.0",
