@@ -1,0 +1,73 @@
+{
+  "name": "@eyueldk/aisdk-toolkit-shell",
+  "version": "1.0.0",
+  "description": "Shell command tools with pluggable adapters (local, Docker, SSH) for the Vercel AI SDK",
+  "license": "MIT",
+  "author": "Eyuel G. Molla",
+  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "module": "./dist/index.mjs",
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eyueldk/aimachine.git",
+    "directory": "packages/shell"
+  },
+  "bugs": {
+    "url": "https://github.com/eyueldk/aimachine/issues"
+  },
+  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/shell#readme",
+  "scripts": {
+    "build": "tsdown",
+    "prepublishOnly": "pnpm check && pnpm build",
+    "check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "eyueldk",
+    "aisdk-toolkit",
+    "@eyueldk/aisdk-toolkit-shell",
+    "ai-sdk",
+    "vercel-ai-sdk",
+    "shell",
+    "terminal",
+    "docker",
+    "ssh",
+    "tools",
+    "agents"
+  ],
+  "dependencies": {
+    "ai": "^6.0.180",
+    "dockerode": "4.0.9",
+    "shell-quote": "^1.8.3",
+    "ssh2": "1.17.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/dockerode": "4.0.1",
+    "@types/shell-quote": "^1.7.5",
+    "@types/node": "^25.7.0",
+    "@types/ssh2": "1.15.5",
+    "dotenv": "^17.2.1",
+    "testcontainers": "^12.0.0",
+    "tsdown": "^0.17.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

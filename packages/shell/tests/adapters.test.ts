@@ -1,0 +1,39 @@
+import { beforeAll, describe, expect, test } from "vitest";
+import { LocalShell } from "../src/index";
+
+describe("LocalShell", () => {
+  let shell: LocalShell;
+
+  beforeAll(async () => {
+    shell = await LocalShell.create();
+  });
+
+  test("runs echo on the local machine", async () => {
+    const result = await shell.exec("echo hello");
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout.trim()).toBe("hello");
+  });
+
+  test("respects cwd", async () => {
+    const result = await shell.exec(
+      process.platform === "win32" ? "cd" : "pwd",
+      { cwd: process.platform === "win32" ? process.env.TEMP : "/tmp" },
+    );
+    expect(result.exitCode).toBe(0);
+    if (process.platform !== "win32") {
+      expect(result.stdout.trim()).toBe("/tmp");
+    }
+  });
+
+  test("captures stderr on failure", async () => {
+    const result = await shell.exec(
+      process.platform === "win32"
+        ? "cmd /c \"exit 7\""
+        : "sh -c 'echo err 1>&2; exit 7'",
+    );
+    expect(result.exitCode).toBe(7);
+    if (process.platform !== "win32") {
+      expect(result.stderr).toContain("err");
+    }
+  });
+});
