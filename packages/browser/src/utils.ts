@@ -1,12 +1,40 @@
-import type { Page } from "puppeteer";
+import type { Page } from "playwright";
 
-export async function getView(page: Page) {
+export function truncateString(value: string, maxLen: number): string {
+  if (value.length <= maxLen) {
+    return value;
+  }
+  return `${value.slice(0, maxLen)}…`;
+}
+
+export function truncateHeaders(
+  headers: Record<string, string>,
+  maxValueLen: number,
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, val] of Object.entries(headers)) {
+    out[key] = truncateString(val, maxValueLen);
+  }
+  return out;
+}
+
+export type PageViewMode = "simplified" | "accessibility";
+
+export async function getPageView(
+  page: Page,
+  mode: PageViewMode = "simplified",
+): Promise<string> {
+  const body =
+    mode === "accessibility"
+      ? await getAccessibilitySnapshot(page)
+      : await getSimplifiedHtml({ page });
   return [
     `## URL: ${page.url()}`,
     `## Title: ${await page.title()}`,
     `## Fetched At: ${new Date().toISOString()}`,
+    `## View: ${mode}`,
     "\n",
-    await getSimplifiedHtml({ page }),
+    body,
   ].join("\n");
 }
 
@@ -150,4 +178,8 @@ export async function getSimplifiedHtml({
     });
     return render(clone.documentElement) ?? "[EMPTY]";
   });
+}
+
+async function getAccessibilitySnapshot(page: Page): Promise<string> {
+  return page.ariaSnapshot();
 }

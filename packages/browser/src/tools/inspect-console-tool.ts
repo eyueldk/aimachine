@@ -1,29 +1,37 @@
 import { tool } from "ai";
 import { z } from "zod";
-import type { Session } from "../session";
+import type { BrowserInstance } from "../browser/browser-instance";
+import { truncateString } from "../utils";
+import { PageIdSchema } from "../schema";
 
-export function createInspectConsoleTool({ session }: { session: Session }) {
+const MAX_CONSOLE_TEXT = 2_000;
+
+export function createInspectConsoleTool({ browser }: { browser: BrowserInstance }) {
   return tool({
-    description: "Retrieve console logs from the current browsing session.",
+    description:
+      "Retrieve recent console logs for the selected page (ring buffer; long lines truncated in output).",
     inputSchema: z.object({
+      pageId: PageIdSchema,
       limit: z
         .number()
         .optional()
         .describe(
-          "Maximum number of recent logs to retrieve. If not provided, returns all logs.",
+          "Maximum number of recent logs to return. Omit to return all buffered logs.",
         ),
     }),
-    execute: async ({ limit }) => {
-      const messages = session.consoleInspector.items;
-      const messagesToReturn = limit ? messages.slice(-limit) : messages;
-      const formattedLogs = messagesToReturn
-        .map((msg) => {
-          return `[${msg.type().toUpperCase()}] ${msg.text()}`;
-        })
-        .join("\n");
-      const output = [`Console logs (${messagesToReturn.length} messages):`];
-      output.push(formattedLogs || "(no logs)");
-      return output.join("\n");
+    execute: async ({ pageId, limit }) => {
+      return browser.withPage(pageId, async (_page, entry) => {
+        const messages = entry.consoleInspector.getRecent(limit);
+        const formattedLogs = messages
+          .map(
+            (msg) =>
+              `[${msg.type.toUpperCase()}] ${truncateString(msg.text, MAX_CONSOLE_TEXT)}`,
+          )
+          .join("\n");
+        const output = [`Console logs (${messages.length} messages):`];
+        output.push(formattedLogs || "(no logs)");
+        return output.join("\n");
+      });
     },
   });
 }

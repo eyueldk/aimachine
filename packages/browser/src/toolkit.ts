@@ -1,5 +1,4 @@
-import type { Page } from "puppeteer";
-import { Session } from "./session";
+import { BrowserInstance, type BrowserInstanceOptions } from "./browser/browser-instance";
 import { BROWSER_TOOLKIT_HINT } from "./hint";
 import { createBrowserTools } from "./tools";
 
@@ -8,22 +7,22 @@ export type BrowserTools = ReturnType<typeof createBrowserTools>;
 export type BrowserToolkit = {
   tools: BrowserTools;
   hint: string;
-  session: Session;
+  browser: BrowserInstance;
 };
 
-export interface CreateBrowserToolkitOptions {
-  page: Page;
-}
+export type CreateBrowserToolkitOptions = {
+  browser?: BrowserInstance;
+} & BrowserInstanceOptions;
 
 /**
- * Primary entry point: constructs a {@link Session} for the page, AI SDK `tools`, and a
- * `hint` for your system prompt. Pass `tools` / `hint` into `generateText` (etc.); call
- * `await session.close()` when finished (then close the browser if you own it).
+ * Primary entry point: AI SDK tools, system hint, and {@link BrowserInstance}.
+ * Pass `tools` and `hint` into the AI SDK; call `await browser.close()` when finished.
  */
 export function createBrowserToolkit(
-  options: CreateBrowserToolkitOptions,
+  options?: CreateBrowserToolkitOptions,
 ): BrowserToolkit {
-  const session = new Session({ page: options.page });
-  const tools = createBrowserTools({ session });
-  return { tools, hint: BROWSER_TOOLKIT_HINT, session };
+  const { browser: existingBrowser, ...browserOptions } = options ?? {};
+  const browser = existingBrowser ?? new BrowserInstance(browserOptions);
+  const tools = createBrowserTools({ browser });
+  return { tools, hint: BROWSER_TOOLKIT_HINT, browser };
 }

@@ -1,17 +1,19 @@
 import { tool } from "ai";
 import { z } from "zod";
-import type { Session } from "../session";
+import type { BrowserInstance } from "../browser/browser-instance";
+import { PageIdSchema } from "../schema";
 
-export function createGetScreenshotTool({ session }: { session: Session }) {
+export function createGetScreenshotTool({ browser }: { browser: BrowserInstance }) {
   return tool({
-    description: "Take a screenshot of the current browsing session",
-    inputSchema: z.object({}),
-    execute: async () => {
-      const screenshot = await session.page.screenshot({
-        type: "jpeg",
-        quality: 50,
-      });
-      return Buffer.from(screenshot).toString("base64");
+    description: "Take a JPEG screenshot of the selected browser page",
+    inputSchema: z.object({
+      pageId: PageIdSchema,
+    }),
+    execute: async ({ pageId }) => {
+      const screenshot = await browser.withPage(pageId, async (page) =>
+        page.screenshot({ type: "jpeg", quality: 50 }),
+      );
+      return screenshot.toString("base64");
     },
     toModelOutput: async ({ output }) => ({
       type: "content",

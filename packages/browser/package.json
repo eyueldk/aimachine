@@ -1,7 +1,7 @@
 {
   "name": "@eyueldk/aisdk-toolkit-browser",
-  "version": "2.1.0",
-  "description": "Puppeteer browser toolkit (AI SDK tools + session) for the Vercel AI SDK",
+  "version": "1.0.0",
+  "description": "Playwright browser toolkit (AI SDK tools) for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
   "sideEffects": false,
@@ -42,25 +42,22 @@
     "@eyueldk/aisdk-toolkit-browser",
     "ai-sdk",
     "vercel-ai-sdk",
-    "puppeteer",
+    "playwright",
     "browser-automation",
     "tools",
     "agent"
   ],
   "dependencies": {
     "ai": "^6.0.180",
+    "playwright": "^1.52.0",
     "zod": "^4.4.3"
-  },
-  "peerDependencies": {
-    "puppeteer": "^24.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.7.0",
     "tsdown": "^0.17.4",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.6",
-    "puppeteer": "^24.43.1"
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=20"

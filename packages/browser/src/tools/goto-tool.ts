@@ -1,27 +1,28 @@
 import { tool } from "ai";
 import { z } from "zod";
-import type { Session } from "../session";
-import { getView } from "../utils";
+import type { BrowserInstance } from "../browser/browser-instance";
+import { getPageView } from "../utils";
+import { PageIdSchema, ViewAfterSchema } from "../schema";
 
-export function createGotoTool({ session }: { session: Session }) {
+export function createGotoTool({ browser }: { browser: BrowserInstance }) {
   return tool({
-    description: "Navigate to a URL in the current browsing session",
+    description: "Navigate to a URL in the selected browser page",
     inputSchema: z.object({
+      pageId: PageIdSchema,
       url: z.string().describe("The URL to navigate to"),
-      viewAfter: z
-        .boolean()
-        .optional()
-        .describe("If true, return a simplified view after navigating"),
+      viewAfter: ViewAfterSchema,
     }),
-    execute: async ({ url, viewAfter }) => {
+    execute: async ({ pageId, url, viewAfter }) => {
       try {
-        await session.page.goto(url, { waitUntil: "networkidle2" });
-        const base = `Navigated to URL: ${url}`;
-        const output: string[] = [base];
-        if (viewAfter) {
-          output.push(await getView(session.page));
-        }
-        return output.join("\n\n");
+        return await browser.withPage(pageId, async (page) => {
+          await page.goto(url, { waitUntil: "load" });
+          const base = `Navigated to URL: ${url}`;
+          const output: string[] = [base];
+          if (viewAfter) {
+            output.push(await getPageView(page, viewAfter.mode));
+          }
+          return output.join("\n\n");
+        });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);

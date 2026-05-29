@@ -6,9 +6,9 @@ export {
   type TodoStatus,
 } from "./tools/write-todos-tool";
 export {
-  createViewTodosTool,
-  VIEW_TODOS_DESCRIPTION,
-} from "./tools/view-todos-tool";
+  createReadTodosTool,
+  READ_TODOS_DESCRIPTION,
+} from "./tools/read-todos-tool";
 export { TODOS_HINT } from "./hint";
 export {
   createTodosToolkit,

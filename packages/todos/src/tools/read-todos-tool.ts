@@ -2,20 +2,20 @@ import { tool } from "ai";
 import { z } from "zod";
 import type { TodoState } from "../state";
 
-/** Bundled AI SDK tool description for `viewTodos` (read-only Markdown snapshot). */
-export const VIEW_TODOS_DESCRIPTION =
+/** Bundled AI SDK tool description for `readTodos` (read-only Markdown snapshot). */
+export const READ_TODOS_DESCRIPTION =
   "Return the current todo list as Markdown for reading. Does not modify the list. Use when you or the user need a formatted snapshot of tasks and statuses (e.g. after updates or before planning the next step).";
 
-interface CreateViewTodosToolOptions {
+interface CreateReadTodosToolOptions {
   state: TodoState;
 }
 
 /**
- * AI SDK tool `viewTodos`: returns a Markdown snapshot of the list; read-only.
+ * AI SDK tool `readTodos`: returns a Markdown snapshot of the list; read-only.
  */
-export function createViewTodosTool(options: CreateViewTodosToolOptions) {
+export function createReadTodosTool(options: CreateReadTodosToolOptions) {
   return tool({
-    description: VIEW_TODOS_DESCRIPTION,
+    description: READ_TODOS_DESCRIPTION,
     inputSchema: z.object({}),
     execute: async () => {
       const todos = options.state.todos;

@@ -1,7 +1,7 @@
 {
-  "name": "aimachine",
+  "name": "@eyueldk/aisdk-toolkit",
   "private": true,
-  "description": "Monorepo for @eyueldk aisdk-toolkit packages",
+  "description": "Monorepo root for @eyueldk/aisdk-toolkit-* workspace packages",
   "license": "MIT",
   "scripts": {
     "build": "pnpm --filter \"./packages/**\" run build",

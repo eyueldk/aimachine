@@ -1,5 +1,5 @@
 import type { TodoState } from "../state";
-import { createViewTodosTool } from "./view-todos-tool";
+import { createReadTodosTool } from "./read-todos-tool";
 import { createWriteTodosTool } from "./write-todos-tool";
 
 export interface CreateTodoToolsOptions {
@@ -15,8 +15,8 @@ export function createTodoTools(options: CreateTodoToolsOptions) {
   const writeTodos = createWriteTodosTool({
     state: options.state,
   });
-  const viewTodos = createViewTodosTool({
+  const readTodos = createReadTodosTool({
     state: options.state,
   });
-  return { writeTodos, viewTodos } as const;
+  return { writeTodos, readTodos } as const;
 }

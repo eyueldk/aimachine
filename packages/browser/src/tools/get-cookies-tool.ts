@@ -1,17 +1,20 @@
 import { tool } from "ai";
 import { z } from "zod";
-import type { Session } from "../session";
+import type { BrowserInstance } from "../browser/browser-instance";
+import { PageIdSchema } from "../schema";
 
-export function createGetCookiesTool({ session }: { session: Session }) {
+export function createGetCookiesTool({ browser }: { browser: BrowserInstance }) {
   return tool({
-    description: "Return cookies for the current session as a JSON string",
-    inputSchema: z.object({}),
-    execute: async () => {
+    description: "Return cookies for the selected page's browser context",
+    inputSchema: z.object({
+      pageId: PageIdSchema,
+    }),
+    execute: async ({ pageId }) => {
       try {
-        const page = session.page;
-        const ctx = page.browserContext();
-        const cookies = await ctx.cookies();
-        return JSON.stringify(cookies);
+        return await browser.withPage(pageId, async (page) => {
+          const cookies = await page.context().cookies();
+          return JSON.stringify(cookies);
+        });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);

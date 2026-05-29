@@ -1,14 +1,14 @@
-# aimachine
+# @eyueldk/aisdk-toolkit
 
-pnpm monorepo for **[@eyueldk/aisdk-toolkit-browser](packages/browser)**, **[@eyueldk/aisdk-toolkit-todos](packages/todos)**, and **[@eyueldk/aisdk-toolkit-filesystem](packages/filesystem)**.
+Private monorepo root for published **[@eyueldk/aisdk-toolkit-browser](packages/browser)**, **[@eyueldk/aisdk-toolkit-todos](packages/todos)**, and **[@eyueldk/aisdk-toolkit-filesystem](packages/filesystem)** workspace packages.
 
 ## Packages
 
 | Package | Version | Description |
 | --- | --- | --- |
-| [@eyueldk/aisdk-toolkit-browser](packages/browser) | **2.1.0** | Puppeteer browser toolkit (`createBrowserToolkit`, AI SDK tools) for the [Vercel AI SDK](https://ai-sdk.dev) |
-| [@eyueldk/aisdk-toolkit-todos](packages/todos) | **1.1.0** | Task-list toolkit (`writeTodos`, `viewTodos`, `createTodosToolkit`) for the [Vercel AI SDK](https://ai-sdk.dev) |
-| [@eyueldk/aisdk-toolkit-filesystem](packages/filesystem) | **0.1.0** | FileSystem toolkit (`createFileSystemToolkit`, `read`, `write`, `edit`, `list`, `glob`, `grep`, adapters, optional permissions) for the [Vercel AI SDK](https://ai-sdk.dev) |
+| [@eyueldk/aisdk-toolkit-browser](packages/browser) | **1.0.0** | Playwright browser toolkit (`createBrowserToolkit`, `BrowserInstance`, AI SDK tools) for the [Vercel AI SDK](https://ai-sdk.dev) |
+| [@eyueldk/aisdk-toolkit-todos](packages/todos) | **1.2.0** | Task-list toolkit (`writeTodos`, `readTodos`, `createTodosToolkit`) for the [Vercel AI SDK](https://ai-sdk.dev) |
+| [@eyueldk/aisdk-toolkit-filesystem](packages/filesystem) | **1.0.0** | FileSystem toolkit (`createFileSystemToolkit`, adapters, `read` / `write` / `edit` / `list` / `glob` / `grep`) for the [Vercel AI SDK](https://ai-sdk.dev) |
 
 Versions are defined in each package’s **`package.json`**; keep this table in sync when you cut a release.
 

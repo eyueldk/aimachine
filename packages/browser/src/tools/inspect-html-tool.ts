@@ -1,30 +1,33 @@
 import { tool } from "ai";
 import { z } from "zod";
-import type { Session } from "../session";
+import type { BrowserInstance } from "../browser/browser-instance";
+import { PageIdSchema } from "../schema";
 
-export function createInspectHTMLTool({ session }: { session: Session }) {
+export function createInspectHTMLTool({ browser }: { browser: BrowserInstance }) {
   return tool({
     description:
-      "Inspect the outer HTML of a specific element. If a selector is not provided, the outer HTML of the entire page will be returned.",
+      "Return HTML for the full page or a slice matched by a CSS selector",
     inputSchema: z.object({
+      pageId: PageIdSchema,
       cssSelector: z
         .string()
         .optional()
-        .describe("The CSS selector for the element"),
+        .describe(
+          "Optional CSS selector. If omitted, returns the full page HTML.",
+        ),
     }),
-    execute: async ({ cssSelector }) => {
+    execute: async ({ pageId, cssSelector }) => {
       try {
-        if (!cssSelector) {
-          return await session.page.content();
-        }
-        return await session.page.$eval(
-          cssSelector,
-          (element) => element?.outerHTML,
-        );
+        return await browser.withPage(pageId, async (page) => {
+          if (!cssSelector) {
+            return await page.content();
+          }
+          return page.locator(cssSelector).evaluate((el) => el.outerHTML);
+        });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        return `Error occurred getting outer html of "${String(cssSelector)}": ${errorMessage}`;
+        return `Error inspecting HTML: ${errorMessage}`;
       }
     },
   });

@@ -3,9 +3,9 @@
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-browser)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-browser)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
-**Version:** `2.1.0` (also in `package.json` `"version"`).
+**Version:** `1.0.0` (also in `package.json` `"version"`).
 
-**Puppeteer-backed browser toolkit** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createBrowserToolkit({ page })`** returns **`{ tools, hint, session }`**. Types line up with the **`puppeteer`** package (Chromium install scripts unless you configure otherwise).
+**Playwright-backed browser toolkit** for the [Vercel AI SDK](https://ai-sdk.dev): **`createBrowserToolkit({ browserWSEndpoint? })`** returns **`{ tools, hint, browser }`**. Pages are identified by **`pageId`** (UUID). Playwright is bundled — consumers do not install it.
 
 **Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/browser`)
 
@@ -14,64 +14,80 @@
 | | |
 | --- | --- |
 | **Node** | 20+ (`engines.node`) |
-| **Runtime deps** | `ai` ^6, `zod` ^4 |
-| **Peer** | `puppeteer` ^24 (install next to this package for `Page` / `launch` types) |
+| **Runtime deps** | `ai` ^6, `zod` ^4, `playwright` (transitive) |
 
 ## Install
 
 ```bash
-pnpm add @eyueldk/aisdk-toolkit-browser puppeteer
-# or: npm install @eyueldk/aisdk-toolkit-browser puppeteer
+pnpm add @eyueldk/aisdk-toolkit-browser
 ```
 
 ## Usage
 
-1. `launch` and open a `Page`.
-2. **`createBrowserToolkit({ page })`** — creates a **`Session`** (console + network capture), then returns **`{ tools, hint, session }`**. Pass **`tools`** and **`hint`** into the AI SDK.
-3. **`await session.close()`** (stops inspectors and closes the page), then **`await browser.close()`**.
+**Self-launch** (local dev / tests — Chromium via Playwright):
 
 ```ts
 import { generateText, stepCountIs } from "ai";
-import { launch } from "puppeteer";
 import { createBrowserToolkit } from "@eyueldk/aisdk-toolkit-browser";
 
-const browser = await launch({ headless: true });
-const page = await browser.newPage();
-const { tools, hint, session } = createBrowserToolkit({ page });
+const { tools, hint, browser } = createBrowserToolkit();
 
 try {
   await generateText({
     model: yourLanguageModel,
     tools,
     stopWhen: stepCountIs(10),
-    system: `You control a browser tab.\n\n${hint}`,
+    system: `You control browser pages.\n\n${hint}`,
     prompt: "Open https://example.com and return the visible h1 text.",
   });
 } finally {
-  await session.close();
   await browser.close();
 }
 ```
 
-Bring your own model provider (e.g. `@ai-sdk/openai`). Use **`createBrowserToolkit` once per `Page`** you automate. Import **`Session`** if you construct it yourself for **`createBrowserTools`**. **`createBrowserTools`** is still exported if you only need the raw tool map.
+**Attach to your browser** (production — pass a WebSocket endpoint from your own Playwright/Browserless setup):
+
+```ts
+const { tools, hint, browser } = createBrowserToolkit({
+  browserWSEndpoint: process.env.BROWSER_WS,
+});
+```
+
+### Pages and contexts
+
+- Omit **`pageId`** on tools to use the **default page** (created on first use).
+- **`createContext`**, **`createPage`**, **`listContexts`**, **`closePage`**, **`closeContext`** manage isolation.
+- **`createPage`** returns a **`pageId`** — use that on all other tools.
+
+```ts
+const pageResult = await tools.createPage.execute({ contextId }, opts);
+const { pageId } = JSON.parse(pageResult);
+await tools.goto.execute({ pageId, url: "https://example.com" }, opts);
+```
 
 ### Tools
 
-`goto`, `click`, `type`, `evaluate`, `viewPage`, `inspectHTML`, `getScreenshot`, `inspectConsole`, `inspectNetwork`, `getCookies`. Several accept **`viewAfter: true`** to append a simplified page view after the action.
+`goto`, `click`, `type`, `evaluate`, `viewPage`, `inspectHTML`, `getScreenshot`, `inspectConsole`, `inspectNetwork`, `getCookies`, plus lifecycle tools above.
 
-Individual factories (`createGotoTool`, `createClickTool`, …) are available if you want a custom tool set.
+**`viewPage`** accepts optional **`mode`**: `simplified` (default, structural HTML) or `accessibility` (Playwright ARIA snapshot YAML). **`goto`**, **`click`**, **`type`**, and **`evaluate`** accept optional **`viewAfter: { mode }`** to append the same view after the action.
 
-`getScreenshot` returns base64 JPEG and **`toModelOutput`** for multimodal models.
+`inspectConsole` / `inspectNetwork` use **ring buffers** (recent history only); tool output truncates large fields.
 
-**Install note:** with pnpm 10.1+, you may need `pnpm approve-builds --all` so Puppeteer’s postinstall can download Chromium.
+`getScreenshot` returns base64 JPEG with **`toModelOutput`** for multimodal models.
 
 ## Scripts
 
 `pnpm build` · `pnpm check` (`tsc --noEmit`) · `pnpm test`. **`prepublishOnly`** runs `pnpm check && pnpm build` before publish.
 
+Before running tests locally, install Chromium once:
+
+```bash
+cd packages/browser && pnpm exec playwright install chromium
+```
+
 ## Publishing
 
-CI publishes this package when **`packages/browser/**`** changes on **`main`** (see [`.github/workflows/publish.browser.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.browser.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
+CI publishes when **`packages/browser/**`** changes on **`main`** ([`publish.browser.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.browser.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
 
 ## License
 

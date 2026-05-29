@@ -55,12 +55,12 @@ describe("writeTodos tool", () => {
   });
 });
 
-describe("viewTodos tool", () => {
+describe("readTodos tool", () => {
   test("returns markdown for empty list", async () => {
     const state: TodoState = { todos: [] };
-    const { viewTodos } = createTodoTools({ state });
+    const { readTodos } = createTodoTools({ state });
 
-    const result = await viewTodos.execute!(
+    const result = await readTodos.execute!(
       {},
       { ...toolOpts, messages: [] },
     );
@@ -72,7 +72,7 @@ describe("viewTodos tool", () => {
 
   test("returns markdown list after writeTodos", async () => {
     const state: TodoState = { todos: [] };
-    const { writeTodos, viewTodos } = createTodoTools({ state });
+    const { writeTodos, readTodos } = createTodoTools({ state });
 
     await writeTodos.execute!(
       {
@@ -84,7 +84,7 @@ describe("viewTodos tool", () => {
       { ...toolOpts, messages: [] },
     );
 
-    const result = await viewTodos.execute!(
+    const result = await readTodos.execute!(
       {},
       { ...toolOpts, messages: [] },
     );
@@ -100,7 +100,7 @@ describe("createTodosToolkit", () => {
     const state: TodoState = { todos: [] };
     const kit = createTodosToolkit({ state });
     expect(kit.tools.writeTodos).toBeDefined();
-    expect(kit.tools.viewTodos).toBeDefined();
+    expect(kit.tools.readTodos).toBeDefined();
     expect(kit.hint).toBe(TODOS_HINT);
     expect(kit.state).toBe(state);
   });

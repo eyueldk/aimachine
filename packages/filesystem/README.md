@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-filesystem)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-filesystem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
 
-**Version:** `0.1.0` (also in `package.json` `"version"`).
+**Version:** `1.0.0` (also in `package.json` `"version"`).
 
 Pluggable **filesystem tools** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createFileSystemToolkit({ adapter, permissions? })`** returns **`{ tools, hint, state }`**. Pass **`tools`** and **`hint`** (`FILE_SYSTEM_HINT`) into the AI SDK. **`state`** holds the same **`adapter`** and optional **`permissions`** you passed in.
 

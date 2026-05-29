@@ -1,14 +1,15 @@
-/** System text for agents using the browser toolkit. Append to your base system instructions (or merge with other toolkit hints). */
+/** System text for agents using the browser toolkit. Append to your base system instructions. */
 export const BROWSER_TOOLKIT_HINT = `## Browser tools
 
-You control a real browser tab via Puppeteer-backed tools on the current session.
+You control real browser pages via Playwright-backed tools. Each page has a **pageId** (UUID). Omit **pageId** to use the default page.
 
-- **Navigation:** Use \`goto\` with a full URL when you need to load or change pages.
-- **Understanding the page:** Prefer \`viewPage\` for a compact structural summary. Use \`inspectHTML\` when you need a DOM slice (CSS selector). Use \`getScreenshot\` when layout, color, or non-text UI matters (returns image for multimodal models).
-- **Interaction:** Use \`click\` and \`type\` with reliable CSS selectors. Use \`evaluate\` only for small, read-only or tightly-scoped scripts when other tools are insufficient.
-- **Diagnostics:** \`inspectConsole\` and \`inspectNetwork\` surface recent console logs and network activity already captured for this session.
-- **Cookies:** \`getCookies\` reads cookies for the current page when auth or state debugging is needed.
+- **Lifecycle:** \`createContext\`, \`createPage\` (optional \`contextId\`), \`listContexts\`, \`closePage\`, \`closeContext\`.
+- **Navigation:** \`goto\` with a full URL.
+- **Understanding the page:** \`viewPage\` (\`mode\`: \`simplified\` or \`accessibility\`), \`inspectHTML\`, \`getScreenshot\` (multimodal).
+- **Interaction:** \`click\` and \`type\` with CSS selectors. Use \`evaluate\` only for small, scoped scripts.
+- **Diagnostics:** \`inspectConsole\` and \`inspectNetwork\` read **recent ring buffers** (not full history); tool output may truncate large fields.
+- **Cookies:** \`getCookies\` for the page's context.
 
-Several tools support \`viewAfter: true\` to append a simplified page view after the action—useful to confirm the UI state changed.
+Several tools support \`viewAfter: { mode: "simplified" | "accessibility" }\` to append a page view after the action.
 
-Be explicit about which page you expect to be on before acting. Avoid destructive or unbounded \`evaluate\` scripts. Close sessions from the host app when the run is finished (this package does not close the browser for you).`;
+Call \`listContexts\` after opening pages to discover **pageId** values. The host app should call \`await browser.close()\` when the run ends.`;

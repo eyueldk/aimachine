@@ -41,6 +41,10 @@ jobs:
       - name: Build
         run: pnpm --filter '${{ inputs.package }}' run build
 
+      - name: Install Playwright browsers
+        if: inputs.package == '@eyueldk/aisdk-toolkit-browser'
+        run: pnpm --filter '${{ inputs.package }}' exec playwright install chromium
+
       - name: Test
         run: pnpm --filter '${{ inputs.package }}' test
 
