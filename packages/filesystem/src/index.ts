@@ -10,6 +10,10 @@ export type {
 export type { Readable, Writable } from "node:stream";
 export { FileSystemAdapter } from "./adapter";
 export {
+  DaytonaFileSystem,
+  type DaytonaFileSystemCreateOptions,
+} from "./adapters/daytona-adapter";
+export {
   DockerFileSystem,
   type DockerFileSystemCreateOptions,
 } from "./adapters/docker-adapter";

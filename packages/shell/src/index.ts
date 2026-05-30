@@ -2,6 +2,10 @@ export type { ShellExecOptions, ShellExecResult } from "./adapter";
 export { DEFAULT_SHELL_TIMEOUT_MS } from "./adapter";
 export { ShellAdapter } from "./adapter";
 export {
+  DaytonaShell,
+  type DaytonaShellCreateOptions,
+} from "./adapters/daytona-shell";
+export {
   DockerShell,
   type DockerShellCreateOptions,
 } from "./adapters/docker-shell";
