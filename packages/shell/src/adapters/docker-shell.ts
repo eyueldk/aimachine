@@ -52,7 +52,7 @@ export class DockerShell extends ShellAdapter {
     let stream: Duplex | undefined;
     const run = execInContainer(
       this.container,
-      ["sh", "-c", command],
+      ["/bin/sh", "-c", command],
       {
         WorkingDir: cwd,
         Env: envList.length > 0 ? envList : undefined,
