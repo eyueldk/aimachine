@@ -1,13 +1,13 @@
 # @eyueldk/aisdk-toolkit-fetch
 
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-fetch)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-fetch)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE)
 
 **Version:** `1.0.0` (also in `package.json` `"version"`).
 
 **HTTP fetch tools** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createFetchToolkit()`** returns **`{ tools, hint, state }`**. Pass **`tools`** and **`hint`** (`FETCH_HINT`) into the AI SDK. Uses **`globalThis.fetch`** by default.
 
-**Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/fetch`)
+**Repository:** [github.com/eyueldk/aisdk-toolkit](https://github.com/eyueldk/aisdk-toolkit) (`packages/fetch`)
 
 ## Requirements
 
@@ -81,8 +81,8 @@ const { tools, hint } = createFetchToolkit({
 
 ## Publishing
 
-CI publishes when **`packages/fetch/**`** changes on **`main`** ([`publish.fetch.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.fetch.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
+CI publishes when **`packages/fetch/**`** changes on **`main`** ([`publish.fetch.yml`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.github/workflows/publish.fetch.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
 
 ## License
 
-MIT — see [repository LICENSE](https://github.com/eyueldk/aimachine/blob/main/LICENSE).
+MIT — see [repository LICENSE](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE).

@@ -1,3 +1,5 @@
+import { PassThrough } from "node:stream";
+import { buffer } from "node:stream/consumers";
 import { beforeAll, describe, expect, test } from "vitest";
 import { LocalShell } from "../src/index";
 
@@ -23,6 +25,29 @@ describe("LocalShell", () => {
     if (process.platform !== "win32") {
       expect(result.stdout.trim()).toBe("/tmp");
     }
+  });
+
+  test("streams stdout to a writable", async () => {
+    const stdout = new PassThrough();
+    const stdoutDone = buffer(stdout);
+    const result = await shell.exec("echo streamed", { stdout });
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toBe("");
+    expect((await stdoutDone).toString("utf8").trim()).toBe("streamed");
+  });
+
+  test("streams stderr to a writable", async () => {
+    const stderr = new PassThrough();
+    const stderrDone = buffer(stderr);
+    const result = await shell.exec(
+      process.platform === "win32"
+        ? "cmd /c \"echo err 1>&2\""
+        : "sh -c 'echo err 1>&2'",
+      { stderr },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect((await stderrDone).toString("utf8")).toContain("err");
   });
 
   test("captures stderr on failure", async () => {

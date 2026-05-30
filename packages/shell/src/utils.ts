@@ -1,4 +1,5 @@
-import { Writable } from "node:stream";
+import type { Readable, Writable } from "node:stream";
+import { Writable as WritableStream } from "node:stream";
 
 export function withTimeout<T>(
   promise: Promise<T>,
@@ -43,7 +44,42 @@ export function toBuffer(chunk: Buffer | string): Buffer {
   return Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
 }
 
-export class CollectStream extends Writable {
+export function writeChunk(
+  sink: Writable | undefined,
+  chunks: Buffer[],
+  chunk: Buffer | string,
+): void {
+  if (sink) {
+    sink.write(chunk);
+    return;
+  }
+  chunks.push(toBuffer(chunk));
+}
+
+export function bufferedUtf8(chunks: Buffer[]): string {
+  return Buffer.concat(chunks).toString("utf8");
+}
+
+export function attachStdin(
+  stdin: string | Readable | undefined,
+  target: NodeJS.WritableStream | null | undefined,
+): void {
+  if (!target) {
+    return;
+  }
+  if (stdin === undefined) {
+    target.end();
+    return;
+  }
+  if (typeof stdin === "string") {
+    target.write(stdin);
+    target.end();
+    return;
+  }
+  stdin.pipe(target);
+}
+
+export class CollectStream extends WritableStream {
   private readonly chunks: Buffer[] = [];
 
   override _write(

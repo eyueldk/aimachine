@@ -1,3 +1,5 @@
+import type { Readable, Writable } from "node:stream";
+
 export const DEFAULT_SHELL_TIMEOUT_MS = 120_000;
 
 export type ShellExecOptions = {
@@ -7,8 +9,12 @@ export type ShellExecOptions = {
   env?: Record<string, string>;
   /** Maximum runtime in milliseconds (default {@link DEFAULT_SHELL_TIMEOUT_MS}). */
   timeoutMs?: number;
-  /** Bytes written to the process stdin, then closed (local and SSH adapters). */
-  stdin?: string;
+  /** Stdin payload or stream (local and SSH adapters). */
+  stdin?: string | Readable;
+  /** When set, process stdout is written here instead of buffered into the result. */
+  stdout?: Writable;
+  /** When set, process stderr is written here instead of buffered into the result. */
+  stderr?: Writable;
 };
 
 export type ShellExecResult = {

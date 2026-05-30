@@ -5,6 +5,7 @@ export type {
   GrepMatch,
   GrepOptions,
   LsOptions,
+  LsStreamOptions,
 } from "./adapter";
 export type { Readable, Writable } from "node:stream";
 export { FileSystemAdapter } from "./adapter";

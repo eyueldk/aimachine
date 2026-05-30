@@ -1,15 +1,15 @@
 # @eyueldk/aisdk-toolkit-shell
 
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-shell)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-shell)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE)
 
-**Version:** `1.0.0` (also in `package.json` `"version"`).
+**Version:** `1.1.0` (also in `package.json` `"version"`).
 
 **Shell command tools** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createShellToolkit({ adapter })`** returns **`{ tools, hint, state }`**. Pass **`tools`** and **`hint`** (`SHELL_HINT`) into the AI SDK. **`state`** holds the same **`adapter`** you passed in.
 
 Bundled backends: **`LocalShell`** (host shell), **`DockerShell`** ([dockerode](https://github.com/apocas/dockerode), commands in a running container), **`SshShell`** ([ssh2](https://github.com/mscdex/ssh2), remote host over SSH). Subclass **`ShellAdapter`** for custom runtimes.
 
-**Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/shell`)
+**Repository:** [github.com/eyueldk/aisdk-toolkit](https://github.com/eyueldk/aisdk-toolkit) (`packages/shell`)
 
 ## Requirements
 
@@ -88,7 +88,7 @@ try {
 
 ### Tools
 
-**`runCommand`** — run a shell command string; optional per-call **`cwd`** and **`timeoutMs`**. Returns exit code, stdout, and stderr (large output is truncated in the tool response).
+**`runCommand`** — run a shell command string; optional per-call **`cwd`** and **`timeoutMs`**. Returns exit code, stdout, and stderr (large output is truncated in the tool response). For programmatic use, **`adapter.exec`** also accepts **`stdin`** (`string` or **`Readable`**) and **`stdout`** / **`stderr`** **`Writable`** streams (see Configuration).
 
 **`createShellTools`** is the same **`{ adapter }`** object without **`hint`** / **`state`**. **`createRunCommandTool`** is exported for custom tool sets.
 
@@ -99,6 +99,8 @@ try {
 | **`timeoutMs`** | `adapter.exec` / `runCommand` | `120_000` (`DEFAULT_SHELL_TIMEOUT_MS`) |
 | **`cwd`** | adapter factory or per `exec` | adapter-specific |
 | **`env`** | adapter factory or per `exec` | merged into the command environment |
+| **`stdin`** | `adapter.exec` | string (local/SSH); optional **`Readable`** stream |
+| **`stdout`** / **`stderr`** | `adapter.exec` | optional **`Writable`** streams; result strings empty when streaming |
 
 ## Scripts
 
@@ -106,8 +108,8 @@ try {
 
 ## Publishing
 
-CI publishes this package when **`packages/shell/**`** changes on **`main`** (see [`.github/workflows/publish.shell.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.shell.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow on the **`@eyueldk/aisdk-toolkit-shell`** package.
+CI publishes this package when **`packages/shell/**`** changes on **`main`** (see [`.github/workflows/publish.shell.yml`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.github/workflows/publish.shell.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow on the **`@eyueldk/aisdk-toolkit-shell`** package.
 
 ## License
 
-MIT — see [repository LICENSE](https://github.com/eyueldk/aimachine/blob/main/LICENSE).
+MIT — see [repository LICENSE](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE).

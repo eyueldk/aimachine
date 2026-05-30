@@ -1,6 +1,6 @@
 {
   "name": "@eyueldk/aisdk-toolkit-shell",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Shell command tools with pluggable adapters (local, Docker, SSH) for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
@@ -23,13 +23,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eyueldk/aimachine.git",
+    "url": "https://github.com/eyueldk/aisdk-toolkit.git",
     "directory": "packages/shell"
   },
   "bugs": {
-    "url": "https://github.com/eyueldk/aimachine/issues"
+    "url": "https://github.com/eyueldk/aisdk-toolkit/issues"
   },
-  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/shell#readme",
+  "homepage": "https://github.com/eyueldk/aisdk-toolkit/tree/main/packages/shell#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm check && pnpm build",

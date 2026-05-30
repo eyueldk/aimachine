@@ -25,6 +25,13 @@ export interface FileStat {
 export type LsOptions = {
   /** When true, return a flat list of all entries under `path`. Default false: immediate children only. */
   recursive?: boolean;
+  /** When true, yield entries via async iteration instead of buffering a full array. */
+  stream?: false;
+};
+
+export type LsStreamOptions = {
+  recursive?: boolean;
+  stream: true;
 };
 
 export type FileEncodingOptions = {
@@ -88,19 +95,47 @@ export abstract class FileSystemAdapter {
    */
   async readDirRecursive(path: string): Promise<FileStat[]> {
     const out: FileStat[] = [];
-    const visit = async (dir: string): Promise<void> => {
-      const entries = await this.readDir(dir);
-      for (const entry of entries) {
-        out.push(entry);
-        if (entry.type === "dir") await visit(entry.path);
-      }
-    };
-    await visit(path);
+    for await (const entry of this.readDirRecursiveStream(path)) {
+      out.push(entry);
+    }
     return out.sort((a, b) => a.path.localeCompare(b.path));
   }
 
-  /** Wrapper over {@link readDir} and {@link readDirRecursive}. */
-  ls(path: string, options: LsOptions = {}): Promise<FileStat[]> {
+  /** Yields immediate children of `path`. */
+  async *readDirStream(path: string): AsyncIterable<FileStat> {
+    for (const entry of await this.readDir(path)) {
+      yield entry;
+    }
+  }
+
+  /** Yields a flat subtree under `path` (depth-first). Override for native streaming listings. */
+  async *readDirRecursiveStream(path: string): AsyncIterable<FileStat> {
+    const visit = async function* (
+      adapter: FileSystemAdapter,
+      dir: string,
+    ): AsyncIterable<FileStat> {
+      for (const entry of await adapter.readDir(dir)) {
+        yield entry;
+        if (entry.type === "dir") {
+          yield* visit(adapter, entry.path);
+        }
+      }
+    };
+    yield* visit(this, path);
+  }
+
+  /** Wrapper over {@link readDir} / {@link readDirRecursive} or their streaming variants. */
+  ls(path: string, options?: LsOptions): Promise<FileStat[]>;
+  ls(path: string, options: LsStreamOptions): AsyncIterable<FileStat>;
+  ls(
+    path: string,
+    options: LsOptions | LsStreamOptions = {},
+  ): Promise<FileStat[]> | AsyncIterable<FileStat> {
+    if (options.stream) {
+      return options.recursive
+        ? this.readDirRecursiveStream(path)
+        : this.readDirStream(path);
+    }
     return options.recursive ? this.readDirRecursive(path) : this.readDir(path);
   }
 
@@ -142,11 +177,14 @@ export abstract class FileSystemAdapter {
   }
 
   async #collectAllFilePaths(): Promise<string[]> {
-    const entries = await this.ls(".", { recursive: true });
-    return entries
-      .filter((e) => e.type === "file")
-      .map((e) => e.path)
-      .sort();
+    const files: string[] = [];
+    const listing = this.ls(".", { recursive: true, stream: true });
+    for await (const entry of listing) {
+      if (entry.type === "file") {
+        files.push(entry.path);
+      }
+    }
+    return files.sort();
   }
 }
 

@@ -1,6 +1,8 @@
 # @eyueldk/aisdk-toolkit
 
-Private monorepo root for published **[@eyueldk/aisdk-toolkit-*](packages/)** workspace packages.
+Private monorepo for published **[@eyueldk/aisdk-toolkit-*](packages/)** workspace packages.
+
+**Repository:** [github.com/eyueldk/aisdk-toolkit](https://github.com/eyueldk/aisdk-toolkit)
 
 ## Packages
 
@@ -9,8 +11,8 @@ Private monorepo root for published **[@eyueldk/aisdk-toolkit-*](packages/)** wo
 | [@eyueldk/aisdk-toolkit-browser](packages/browser) | **2.0.0** | Playwright browser toolkit (`createBrowserToolkit`, `BrowserInstance`, AI SDK tools) |
 | [@eyueldk/aisdk-toolkit-fetch](packages/fetch) | **1.0.0** | HTTP fetch toolkit (`fetchRequest`, native `fetch`) |
 | [@eyueldk/aisdk-toolkit-todos](packages/todos) | **1.2.1** | Task-list toolkit (`writeTodos`, `readTodos`) |
-| [@eyueldk/aisdk-toolkit-filesystem](packages/filesystem) | **1.0.1** | Filesystem toolkit (`read` / `write` / `edit` / `list` / `glob` / `grep`) |
-| [@eyueldk/aisdk-toolkit-shell](packages/shell) | **1.0.0** | Shell toolkit (`runCommand`, local / Docker / SSH adapters) |
+| [@eyueldk/aisdk-toolkit-filesystem](packages/filesystem) | **1.1.0** | Filesystem toolkit (`read` / `write` / `edit` / `list` / `glob` / `grep`; `ls` streaming) |
+| [@eyueldk/aisdk-toolkit-shell](packages/shell) | **1.1.0** | Shell toolkit (`runCommand`; streaming stdio on adapters) |
 
 Versions are defined in each package’s **`package.json`**; keep this table in sync when you cut a release.
 

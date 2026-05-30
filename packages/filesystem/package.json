@@ -1,6 +1,6 @@
 {
   "name": "@eyueldk/aisdk-toolkit-filesystem",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "FileSystem AI SDK tools with pluggable adapters for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
@@ -23,13 +23,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eyueldk/aimachine.git",
+    "url": "https://github.com/eyueldk/aisdk-toolkit.git",
     "directory": "packages/filesystem"
   },
   "bugs": {
-    "url": "https://github.com/eyueldk/aimachine/issues"
+    "url": "https://github.com/eyueldk/aisdk-toolkit/issues"
   },
-  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/filesystem#readme",
+  "homepage": "https://github.com/eyueldk/aisdk-toolkit/tree/main/packages/filesystem#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm check && pnpm build",

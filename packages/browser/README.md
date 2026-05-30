@@ -1,13 +1,13 @@
 # @eyueldk/aisdk-toolkit-browser
 
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-browser)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-browser)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE)
 
 **Version:** `2.0.0` (also in `package.json` `"version"`).
 
 **Playwright-backed browser toolkit** for the [Vercel AI SDK](https://ai-sdk.dev): **`createBrowserToolkit({ browserWSEndpoint? })`** returns **`{ tools, hint, state }`** where **`state.browser`** is the **`BrowserInstance`**. Pages are identified by **`pageId`** (UUID). Playwright is bundled — consumers do not install it.
 
-**Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/browser`)
+**Repository:** [github.com/eyueldk/aisdk-toolkit](https://github.com/eyueldk/aisdk-toolkit) (`packages/browser`)
 
 ## Requirements
 
@@ -91,12 +91,12 @@ Before running tests locally, install Chromium once:
 cd packages/browser && pnpm exec playwright install chromium
 ```
 
-Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aimachine/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent` and requires Chromium when enabled.
+Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent` and requires Chromium when enabled.
 
 ## Publishing
 
-CI publishes when **`packages/browser/**`** changes on **`main`** ([`publish.browser.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.browser.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
+CI publishes when **`packages/browser/**`** changes on **`main`** ([`publish.browser.yml`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.github/workflows/publish.browser.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
 
 ## License
 
-MIT — see [repository LICENSE](https://github.com/eyueldk/aimachine/blob/main/LICENSE).
+MIT — see [repository LICENSE](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE).

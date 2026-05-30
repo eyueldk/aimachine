@@ -6,7 +6,14 @@ import {
   type ShellExecOptions,
   type ShellExecResult,
 } from "../adapter";
-import { mergeEnvLayers, toBuffer, withTimeout } from "../utils";
+import {
+  attachStdin,
+  bufferedUtf8,
+  mergeEnvLayers,
+  toBuffer,
+  withTimeout,
+  writeChunk,
+} from "../utils";
 
 export type SshShellCreateOptions = {
   host: string;
@@ -71,7 +78,7 @@ export class SshShell extends ShellAdapter {
     const timeoutMs = options?.timeoutMs ?? DEFAULT_SHELL_TIMEOUT_MS;
 
     let stream: ClientChannel | undefined;
-    const run = execOnClient(this.client, remoteCommand, options?.stdin, (s) => {
+    const run = execOnClient(this.client, remoteCommand, options, (s) => {
       stream = s;
     });
 
@@ -88,7 +95,7 @@ export class SshShell extends ShellAdapter {
 function execOnClient(
   client: Client,
   command: string,
-  stdin: string | undefined,
+  options: ShellExecOptions | undefined,
   onStream: (stream: ClientChannel) => void,
 ): Promise<ShellExecResult> {
   return new Promise((resolve, reject) => {
@@ -105,10 +112,10 @@ function execOnClient(
       let settled = false;
 
       stream.on("data", (chunk: Buffer | string) => {
-        stdoutChunks.push(toBuffer(chunk));
+        writeChunk(options?.stdout, stdoutChunks, chunk);
       });
       stream.stderr.on("data", (chunk: Buffer | string) => {
-        stderrChunks.push(toBuffer(chunk));
+        writeChunk(options?.stderr, stderrChunks, chunk);
       });
       stream.on("error", (streamErr: Error) => {
         if (settled) {
@@ -122,18 +129,30 @@ function execOnClient(
           return;
         }
         settled = true;
+        options?.stdout?.end();
+        options?.stderr?.end();
         resolve({
-          stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-          stderr: Buffer.concat(stderrChunks).toString("utf8"),
+          stdout: options?.stdout ? "" : bufferedUtf8(stdoutChunks),
+          stderr: options?.stderr ? "" : bufferedUtf8(stderrChunks),
           exitCode: code ?? 1,
           signal,
         });
       });
 
-      if (stdin !== undefined) {
-        stream.write(stdin);
+      if (options?.stdin !== undefined) {
+        if (typeof options.stdin === "string") {
+          stream.write(options.stdin);
+          stream.end();
+        } else {
+          options.stdin.on("data", (chunk) => {
+            stream.write(toBuffer(chunk));
+          });
+          options.stdin.on("end", () => stream.end());
+          options.stdin.on("error", () => stream.destroy());
+        }
+      } else {
+        stream.end();
       }
-      stream.end();
     });
   });
 }

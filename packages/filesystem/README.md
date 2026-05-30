@@ -1,15 +1,15 @@
 # @eyueldk/aisdk-toolkit-filesystem
 
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-filesystem)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-filesystem)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE)
 
-**Version:** `1.0.1` (also in `package.json` `"version"`).
+**Version:** `1.1.0` (also in `package.json` `"version"`).
 
 Pluggable **filesystem tools** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …): **`createFileSystemToolkit({ adapter, permissions? })`** returns **`{ tools, hint, state }`**. Pass **`tools`** and **`hint`** (`FILE_SYSTEM_HINT`) into the AI SDK. **`state`** holds the same **`adapter`** and optional **`permissions`** you passed in.
 
 Bundled backends: **`MemoryFileSystem`** (volatile [memfs](https://github.com/streamich/memfs)), **`LocalFileSystem`** (host disk under a **`root`** directory), **`DockerFileSystem`** ([dockerode](https://github.com/apocas/dockerode), files in a running container). Subclass **`FileSystemAdapter`** for custom storage.
 
-**Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/filesystem`)
+**Repository:** [github.com/eyueldk/aisdk-toolkit](https://github.com/eyueldk/aisdk-toolkit) (`packages/filesystem`)
 
 ## Requirements
 
@@ -84,11 +84,11 @@ const container = await DockerFileSystem.create({
 });
 ```
 
-Extend **`FileSystemAdapter`**: implement **`createReadStream`**, **`createWriteStream`**, and **`readDir`**. **`readFile`** / **`writeFile`** use those streams on the base class. Override **`glob`** / **`grep`** only when the default tree walk is not enough.
+Extend **`FileSystemAdapter`**: implement **`createReadStream`**, **`createWriteStream`**, and **`readDir`**. **`readFile`** / **`writeFile`** use those streams on the base class. **`ls(path, { recursive?, stream? })`** returns **`FileStat[]`** by default, or **`AsyncIterable<FileStat>`** when **`stream: true`** (for large trees). Override **`glob`** / **`grep`** only when the default tree walk is not enough.
 
 ### Tools
 
-`read`, `write`, `edit` (exact `oldText` → `newText`), `list` (optional `recursive`), `glob`, `grep` (RegExp + optional `pathGlob`). Tools enforce **`permissions`** on each path; **`list`** / **`glob`** / **`grep`** omit denied paths instead of throwing.
+`read`, `write`, `edit` (exact `oldText` → `newText`), `list` (optional `recursive`), `glob`, `grep` (RegExp + optional `pathGlob`). Tools enforce **`permissions`** on each path; **`list`** / **`glob`** / **`grep`** omit denied paths instead of throwing. Adapter **`ls({ stream: true })`** streams entries for large trees (used internally by **`glob`** / **`grep`**).
 
 ## Permissions
 
@@ -100,12 +100,12 @@ Helpers: **`enforcePermissions`**, **`evaluatePermission`**, **`isOperationAllow
 
 `pnpm build` · `pnpm check` (`tsc --noEmit`) · `pnpm test` (when Docker is available, Docker adapter tests use **Testcontainers** to start **`alpine`**; otherwise they are skipped). **`prepublishOnly`** runs `pnpm check && pnpm build` before publish.
 
-Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aimachine/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent`.
+Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent`.
 
 ## Publishing
 
-CI publishes this package when **`packages/filesystem/**`** changes on **`main`** (see [`.github/workflows/publish.filesystem.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.filesystem.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow on the **`@eyueldk/aisdk-toolkit-filesystem`** package.
+CI publishes this package when **`packages/filesystem/**`** changes on **`main`** (see [`.github/workflows/publish.filesystem.yml`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.github/workflows/publish.filesystem.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow on the **`@eyueldk/aisdk-toolkit-filesystem`** package.
 
 ## License
 
-MIT — see [repository LICENSE](https://github.com/eyueldk/aimachine/blob/main/LICENSE).
+MIT — see [repository LICENSE](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE).

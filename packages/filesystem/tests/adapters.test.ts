@@ -107,6 +107,40 @@ describe("MemoryFileSystem", () => {
     expect((await adapter.readFile("out.txt")).toString("utf8")).toBe("via-stream");
   });
 
+  test("ls stream without recursive yields immediate children only", async () => {
+    const adapter = await MemoryFileSystem.create({
+      initialFiles: {
+        "a.txt": "a",
+        "dir/b.txt": "b",
+      },
+    });
+    const streamed: string[] = [];
+    for await (const entry of adapter.ls("dir", { stream: true })) {
+      streamed.push(`${entry.type}:${entry.path}`);
+    }
+    expect(streamed).toEqual(["file:dir/b.txt"]);
+  });
+
+  test("ls stream yields entries without buffering the full tree", async () => {
+    const adapter = await MemoryFileSystem.create({
+      initialFiles: {
+        "a.txt": "a",
+        "dir/b.txt": "b",
+      },
+    });
+    const streamed: string[] = [];
+    for await (const entry of adapter.ls(".", { recursive: true, stream: true })) {
+      streamed.push(`${entry.type}:${entry.path}`);
+    }
+    expect(streamed).toContain("file:a.txt");
+    expect(streamed).toContain("dir:dir");
+    expect(streamed).toContain("file:dir/b.txt");
+    const buffered = await adapter.ls(".", { recursive: true });
+    expect(buffered.map((e) => `${e.type}:${e.path}`).sort()).toEqual(
+      streamed.sort(),
+    );
+  });
+
   test("default glob and grep use readDir + readFile", async () => {
     const adapter = await MemoryFileSystem.create({
       initialFiles: {

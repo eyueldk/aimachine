@@ -23,13 +23,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eyueldk/aimachine.git",
+    "url": "https://github.com/eyueldk/aisdk-toolkit.git",
     "directory": "packages/todos"
   },
   "bugs": {
-    "url": "https://github.com/eyueldk/aimachine/issues"
+    "url": "https://github.com/eyueldk/aisdk-toolkit/issues"
   },
-  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/todos#readme",
+  "homepage": "https://github.com/eyueldk/aisdk-toolkit/tree/main/packages/todos#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm check && pnpm build",

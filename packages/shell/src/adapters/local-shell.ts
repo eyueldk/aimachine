@@ -5,7 +5,13 @@ import {
   type ShellExecOptions,
   type ShellExecResult,
 } from "../adapter";
-import { mergeEnvLayers, toBuffer, withTimeout } from "../utils";
+import {
+  attachStdin,
+  bufferedUtf8,
+  mergeEnvLayers,
+  withTimeout,
+  writeChunk,
+} from "../utils";
 
 export type LocalShellCreateOptions = {
   /** Default working directory for commands without `cwd`. */
@@ -53,10 +59,10 @@ export class LocalShell extends ShellAdapter {
       let settled = false;
 
       child.stdout?.on("data", (chunk: Buffer | string) => {
-        stdoutChunks.push(toBuffer(chunk));
+        writeChunk(options?.stdout, stdoutChunks, chunk);
       });
       child.stderr?.on("data", (chunk: Buffer | string) => {
-        stderrChunks.push(toBuffer(chunk));
+        writeChunk(options?.stderr, stderrChunks, chunk);
       });
 
       child.on("error", (err) => {
@@ -72,18 +78,17 @@ export class LocalShell extends ShellAdapter {
           return;
         }
         settled = true;
+        options?.stdout?.end();
+        options?.stderr?.end();
         resolve({
-          stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-          stderr: Buffer.concat(stderrChunks).toString("utf8"),
+          stdout: options?.stdout ? "" : bufferedUtf8(stdoutChunks),
+          stderr: options?.stderr ? "" : bufferedUtf8(stderrChunks),
           exitCode: code ?? 1,
           signal,
         });
       });
 
-      if (options?.stdin !== undefined) {
-        child.stdin?.write(options.stdin);
-      }
-      child.stdin?.end();
+      attachStdin(options?.stdin, child.stdin);
     });
 
     return withTimeout(run, timeoutMs, () => {

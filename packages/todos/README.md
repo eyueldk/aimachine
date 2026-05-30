@@ -1,13 +1,13 @@
 # @eyueldk/aisdk-toolkit-todos
 
 [![npm](https://img.shields.io/npm/v/@eyueldk/aisdk-toolkit-todos)](https://www.npmjs.com/package/@eyueldk/aisdk-toolkit-todos)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aimachine/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE)
 
 **Version:** `1.2.1` (also in `package.json` `"version"`).
 
 **`writeTodos`** and **`readTodos`** for the [Vercel AI SDK](https://ai-sdk.dev) (`generateText`, `streamText`, `ToolLoopAgent`, …). **`createTodosToolkit({ state })`** returns **`{ tools, hint, state }`** — merge **`tools`**, append **`hint`** (`TODOS_HINT`) to your system prompt, and read **`state.todos`**. **`state`** is a plain **`TodoState`** object (`{ todos: Todo[] }`); `writeTodos` replaces **`state.todos`**. **`readTodos`** returns a Markdown bullet list (read-only). Status values: **`pending`**, **`in_progress`**, **`completed`**.
 
-**Repository:** [github.com/eyueldk/aimachine](https://github.com/eyueldk/aimachine) (`packages/todos`)
+**Repository:** [github.com/eyueldk/aisdk-toolkit](https://github.com/eyueldk/aisdk-toolkit) (`packages/todos`)
 
 ## Requirements
 
@@ -61,12 +61,12 @@ console.log(state.todos);
 
 `pnpm build` · `pnpm check` (`tsc --noEmit`) · `pnpm test`. **`prepublishOnly`** runs `pnpm check && pnpm build` before publish.
 
-Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aimachine/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent`.
+Optional live agent smoke test: `tests/integration.test.ts` (skipped unless repo-root `.env` has non-empty `OPENROUTER_API_KEY` and `OPENROUTER_MODEL`; copy [`.env.example`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.env.example)). Uses [OpenRouter](https://openrouter.ai/) with AI SDK `ToolLoopAgent`.
 
 ## Publishing
 
-CI publishes when **`packages/todos/**`** changes on **`main`** ([`publish.todos.yml`](https://github.com/eyueldk/aimachine/blob/main/.github/workflows/publish.todos.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
+CI publishes when **`packages/todos/**`** changes on **`main`** ([`publish.todos.yml`](https://github.com/eyueldk/aisdk-toolkit/blob/main/.github/workflows/publish.todos.yml)) or via **workflow_dispatch**. Configure [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for that workflow.
 
 ## License
 
-MIT — see [repository LICENSE](https://github.com/eyueldk/aimachine/blob/main/LICENSE).
+MIT — see [repository LICENSE](https://github.com/eyueldk/aisdk-toolkit/blob/main/LICENSE).
