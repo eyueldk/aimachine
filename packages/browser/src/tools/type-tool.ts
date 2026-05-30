@@ -24,7 +24,7 @@ export function createTypeTool({ browser }: { browser: BrowserInstance }) {
           const base = `Typed text into CSS selector: ${cssSelector}`;
           const output: string[] = [base];
           if (viewAfter) {
-            output.push(await getPageView(page, viewAfter.mode));
+            output.push(await getPageView(page, viewAfter.format));
           }
           return output.join("\n\n");
         });

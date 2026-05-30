@@ -26,7 +26,7 @@ export function createEvaluateTool({ browser }: { browser: BrowserInstance }) {
           const base = `Execution result: ${JSON.stringify(result)}`;
           const output = [base];
           if (viewAfter) {
-            output.push(await getPageView(page, viewAfter.mode));
+            output.push(await getPageView(page, viewAfter.format));
           }
           return output.join("\n\n");
         });

@@ -22,7 +22,7 @@ export function createClickTool({ browser }: { browser: BrowserInstance }) {
           const base = `Clicked element using CSS selector: ${cssSelector}`;
           const output: string[] = [base];
           if (viewAfter) {
-            output.push(await getPageView(page, viewAfter.mode));
+            output.push(await getPageView(page, viewAfter.format));
           }
           return output.join("\n\n");
         });

@@ -1,4 +1,5 @@
 import type { Page } from "playwright";
+import { htmlToMarkdown } from "./html-to-markdown";
 
 export function truncateString(value: string, maxLen: number): string {
   if (value.length <= maxLen) {
@@ -18,21 +19,23 @@ export function truncateHeaders(
   return out;
 }
 
-export type PageViewMode = "simplified" | "accessibility";
+export type PageViewFormat = "simplified" | "accessibility" | "markdown";
 
 export async function getPageView(
   page: Page,
-  mode: PageViewMode = "simplified",
+  format: PageViewFormat = "simplified",
 ): Promise<string> {
   const body =
-    mode === "accessibility"
+    format === "accessibility"
       ? await getAccessibilitySnapshot(page)
-      : await getSimplifiedHtml({ page });
+      : format === "markdown"
+        ? await getPageMarkdown(page)
+        : await getSimplifiedHtml({ page });
   return [
     `## URL: ${page.url()}`,
     `## Title: ${await page.title()}`,
     `## Fetched At: ${new Date().toISOString()}`,
-    `## View: ${mode}`,
+    `## Format: ${format}`,
     "\n",
     body,
   ].join("\n");
@@ -182,4 +185,17 @@ export async function getSimplifiedHtml({
 
 async function getAccessibilitySnapshot(page: Page): Promise<string> {
   return page.ariaSnapshot();
+}
+
+async function getPageMarkdown(page: Page): Promise<string> {
+  const html = await page.evaluate(() => {
+    const clone = document.cloneNode(true) as Document;
+    clone
+      .querySelectorAll("script, style, noscript, link, svg")
+      .forEach((el) => el.remove());
+    const root = clone.body ?? clone.documentElement;
+    return root.innerHTML;
+  });
+  const markdown = htmlToMarkdown(html);
+  return markdown || "[EMPTY]";
 }

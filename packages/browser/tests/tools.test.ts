@@ -15,7 +15,7 @@ describe("Browser Tools Integration Tests", () => {
   beforeAll(async () => {
     kit = createBrowserToolkit();
     tools = kit.tools;
-    defaultPageId = await kit.browser.createPage();
+    defaultPageId = await kit.state.browser.createPage();
     await tools.goto.execute!(
       { pageId: defaultPageId, url: "https://example.com" },
       { ...toolOpts, messages: [] },
@@ -23,13 +23,13 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   afterAll(async () => {
-    await kit.browser.close();
+    await kit.state.browser.close();
   });
 
-  test("createBrowserToolkit returns tools, hint, and browser", () => {
+  test("createBrowserToolkit returns tools, hint, and state.browser", () => {
     expect(kit.tools.goto).toBeDefined();
     expect(kit.hint).toContain("pageId");
-    expect(kit.browser).toBeDefined();
+    expect(kit.state.browser).toBeDefined();
   });
 
   test("goto tool should navigate to a URL", async () => {
@@ -41,7 +41,7 @@ describe("Browser Tools Integration Tests", () => {
     expect(typeof result).toBe("string");
     expect((result as string).length).toBeGreaterThan(0);
 
-    const url = await kit.browser.withPage(undefined, async (page) => page.url());
+    const url = await kit.state.browser.withPage(undefined, async (page) => page.url());
     expect(url).toBe("https://example.com/");
   });
 
@@ -51,7 +51,7 @@ describe("Browser Tools Integration Tests", () => {
       { ...toolOpts, messages: [] },
     );
     expect(typeof result).toBe("string");
-    const url = await kit.browser.withPage(defaultPageId, async (page) =>
+    const url = await kit.state.browser.withPage(defaultPageId, async (page) =>
       page.url(),
     );
     expect(url).toBe("https://example.org/");
@@ -78,7 +78,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   test("type tool should type text into an input", async () => {
-    await kit.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(undefined, async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -98,14 +98,14 @@ describe("Browser Tools Integration Tests", () => {
 
     expect(typeof result).toBe("string");
 
-    const inputValue = await kit.browser.withPage(undefined, async (page) =>
+    const inputValue = await kit.state.browser.withPage(undefined, async (page) =>
       page.locator("#test-input").inputValue(),
     );
     expect(inputValue).toBe("Hello World");
   });
 
   test("click tool should click an element", async () => {
-    await kit.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(undefined, async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -122,7 +122,7 @@ describe("Browser Tools Integration Tests", () => {
 
     expect(typeof result).toBe("string");
 
-    const bgColor = await kit.browser.withPage(undefined, async (page) =>
+    const bgColor = await kit.state.browser.withPage(undefined, async (page) =>
       page.evaluate(() => document.body.style.backgroundColor),
     );
     expect(bgColor).toBe("red");
@@ -139,7 +139,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   test("viewPage tool should return simplified page content by default", async () => {
-    await kit.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(undefined, async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -158,11 +158,34 @@ describe("Browser Tools Integration Tests", () => {
 
     expect(typeof result).toBe("string");
     expect((result as string)).toContain("Test Title");
-    expect((result as string)).toContain("## View: simplified");
+    expect((result as string)).toContain("## Format: simplified");
   });
 
-  test("viewPage accessibility mode returns ARIA snapshot", async () => {
-    await kit.browser.withPage(undefined, async (page) => {
+  test("viewPage markdown format returns readable content", async () => {
+    await kit.state.browser.withPage(undefined, async (page) => {
+      await page.setContent(`
+      <html>
+        <body>
+          <h1>Markdown Title</h1>
+          <p>First paragraph.</p>
+        </body>
+      </html>
+    `);
+    });
+
+    const result = await tools.viewPage.execute!(
+      { format: "markdown" },
+      { ...toolOpts, messages: [] },
+    );
+
+    expect(typeof result).toBe("string");
+    expect((result as string)).toContain("## Format: markdown");
+    expect((result as string)).toContain("# Markdown Title");
+    expect((result as string)).toContain("First paragraph.");
+  });
+
+  test("viewPage accessibility format returns ARIA snapshot", async () => {
+    await kit.state.browser.withPage(undefined, async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -173,12 +196,12 @@ describe("Browser Tools Integration Tests", () => {
     });
 
     const result = await tools.viewPage.execute!(
-      { mode: "accessibility" },
+      { format: "accessibility" },
       { ...toolOpts, messages: [] },
     );
 
     expect(typeof result).toBe("string");
-    expect((result as string)).toContain("## View: accessibility");
+    expect((result as string)).toContain("## Format: accessibility");
     expect((result as string)).toContain("Accessible Title");
   });
 

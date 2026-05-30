@@ -19,7 +19,7 @@ export function createGotoTool({ browser }: { browser: BrowserInstance }) {
           const base = `Navigated to URL: ${url}`;
           const output: string[] = [base];
           if (viewAfter) {
-            output.push(await getPageView(page, viewAfter.mode));
+            output.push(await getPageView(page, viewAfter.format));
           }
           return output.join("\n\n");
         });

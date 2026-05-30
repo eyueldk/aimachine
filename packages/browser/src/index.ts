@@ -1,8 +1,10 @@
 export {
   createBrowserToolkit,
   type BrowserToolkit,
+  type BrowserToolkitState,
   type BrowserTools,
   type CreateBrowserToolkitOptions,
+  type Toolkit,
 } from "./toolkit";
 export {
   BrowserInstance,

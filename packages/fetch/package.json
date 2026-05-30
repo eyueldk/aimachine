@@ -1,7 +1,7 @@
 {
-  "name": "@eyueldk/aisdk-toolkit-browser",
-  "version": "2.0.0",
-  "description": "Playwright browser toolkit (AI SDK tools) for the Vercel AI SDK",
+  "name": "@eyueldk/aisdk-toolkit-fetch",
+  "version": "1.0.0",
+  "description": "HTTP fetch tools (native fetch) for the Vercel AI SDK",
   "license": "MIT",
   "author": "Eyuel G. Molla",
   "sideEffects": false,
@@ -24,12 +24,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/eyueldk/aimachine.git",
-    "directory": "packages/browser"
+    "directory": "packages/fetch"
   },
   "bugs": {
     "url": "https://github.com/eyueldk/aimachine/issues"
   },
-  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/browser#readme",
+  "homepage": "https://github.com/eyueldk/aimachine/tree/main/packages/fetch#readme",
   "scripts": {
     "build": "tsdown",
     "prepublishOnly": "pnpm check && pnpm build",
@@ -39,18 +39,17 @@
   "keywords": [
     "eyueldk",
     "aisdk-toolkit",
-    "@eyueldk/aisdk-toolkit-browser",
+    "@eyueldk/aisdk-toolkit-fetch",
     "ai-sdk",
     "vercel-ai-sdk",
-    "playwright",
-    "browser-automation",
+    "fetch",
+    "http",
     "tools",
-    "agent"
+    "agents"
   ],
   "dependencies": {
     "@truto/turndown-plugin-gfm": "^1.0.2",
     "ai": "^6.0.180",
-    "playwright": "^1.52.0",
     "turndown": "^7.2.4",
     "zod": "^4.4.3"
   },
@@ -60,7 +59,6 @@
     "@types/node": "^25.7.0",
     "dotenv": "^17.2.1",
     "tsdown": "^0.17.4",
-    "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.6"
   },
