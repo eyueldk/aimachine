@@ -43,7 +43,7 @@ await generateText({
 | Adapter | Factory | Notes |
 | --- | --- | --- |
 | **LocalShell** | `await LocalShell.create({ cwd?, env? })` | Host shell; **`stdin`** supported |
-| **DockerShell** | `await DockerShell.create({ container, cwd?, docker?, env? })` | `sh -c` in container; no **`stdin`** |
+| **DockerShell** | `await DockerShell.create({ container, cwd?, env? })` | Pass a dockerode **`Container`**; `sh -c`; no **`stdin`** |
 | **SshShell** | `await SshShell.create({ host, username, … })` | Persistent SSH; call **`dispose()`** when done |
 | **DaytonaShell** | `await DaytonaShell.create({ sandbox, cwd?, env? })` | Default **`cwd`**: `workspace`; no **`stdin`** |
 

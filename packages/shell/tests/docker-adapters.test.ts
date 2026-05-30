@@ -1,3 +1,4 @@
+import type { Container } from "dockerode";
 import Dockerode from "dockerode";
 import { GenericContainer, type StartedTestContainer } from "testcontainers";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
@@ -13,25 +14,25 @@ const hasDocker = await (async () => {
 })();
 
 describe.skipIf(!hasDocker)("DockerShell", () => {
-  let docker: Dockerode;
-  let container: StartedTestContainer;
+  let started: StartedTestContainer;
+  let container: Container;
 
   beforeAll(async () => {
-    docker = new Dockerode();
-    container = await new GenericContainer("alpine")
+    const docker = new Dockerode();
+    started = await new GenericContainer("alpine")
       .withCommand(["sh", "-c", "mkdir -p /work && exec sleep infinity"])
       .start();
+    container = docker.getContainer(started.getId());
   }, 120_000);
 
   afterAll(async () => {
-    await container.stop();
+    await started.stop();
   });
 
   test("runs a command in the container", async () => {
     const shell = await DockerShell.create({
-      container: container.getId(),
+      container,
       cwd: "/work",
-      docker,
     });
     const result = await shell.exec("echo from-docker");
     expect(result.exitCode).toBe(0);

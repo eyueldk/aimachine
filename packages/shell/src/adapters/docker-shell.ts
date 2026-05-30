@@ -1,5 +1,4 @@
 import type { Container } from "dockerode";
-import Dockerode from "dockerode";
 import type { Duplex, Writable } from "node:stream";
 import {
   DEFAULT_SHELL_TIMEOUT_MS,
@@ -15,12 +14,10 @@ import {
 } from "../utils";
 
 export type DockerShellCreateOptions = {
-  /** Container ID or name. */
-  container: string;
+  /** dockerode container handle for a running container. */
+  container: Container;
   /** Default working directory inside the container (default `/`). */
   cwd?: string;
-  /** dockerode client (default: `DOCKER_HOST` / local socket). */
-  docker?: Dockerode;
   /** Default environment variables for each command. */
   env?: Record<string, string>;
 };
@@ -37,12 +34,12 @@ export class DockerShell extends ShellAdapter {
     super();
   }
 
-  static async create(options: DockerShellCreateOptions): Promise<DockerShell> {
-    const docker = options.docker ?? new Dockerode();
-    const container = docker.getContainer(options.container);
-    await container.inspect();
+  static async create(
+    options: DockerShellCreateOptions,
+  ): Promise<DockerShell> {
+    await options.container.inspect();
     const defaultCwd = normalizeContainerCwd(options.cwd ?? "/");
-    return new DockerShell(container, defaultCwd, options.env);
+    return new DockerShell(options.container, defaultCwd, options.env);
   }
 
   exec(command: string, options?: ShellExecOptions): Promise<ShellExecResult> {
