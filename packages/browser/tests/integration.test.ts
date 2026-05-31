@@ -27,7 +27,7 @@ describe.skipIf(!openRouterReady)(
           prompt: 'Call goto with url "https://example.com/".',
         });
 
-        const url = await kit.state.browser.withPage(undefined, async (page) =>
+        const url = await kit.state.browser.withPage(async (page) =>
           page.url(),
         );
         expect(url).toBe("https://example.com/");

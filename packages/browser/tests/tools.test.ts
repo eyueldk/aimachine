@@ -15,9 +15,9 @@ describe("Browser Tools Integration Tests", () => {
   beforeAll(async () => {
     kit = createBrowserToolkit();
     tools = kit.tools;
-    defaultPageId = await kit.state.browser.createPage();
+    defaultPageId = await kit.state.browser.newPage();
     await tools.goto.execute!(
-      { pageId: defaultPageId, url: "https://example.com" },
+      { url: "https://example.com" },
       { ...toolOpts, messages: [] },
     );
   });
@@ -28,7 +28,7 @@ describe("Browser Tools Integration Tests", () => {
 
   test("createBrowserToolkit returns tools, hint, and state.browser", () => {
     expect(kit.tools.goto).toBeDefined();
-    expect(kit.hint).toContain("pageId");
+    expect(kit.hint).toContain("active page");
     expect(kit.state.browser).toBeDefined();
   });
 
@@ -41,20 +41,23 @@ describe("Browser Tools Integration Tests", () => {
     expect(typeof result).toBe("string");
     expect((result as string).length).toBeGreaterThan(0);
 
-    const url = await kit.state.browser.withPage(undefined, async (page) => page.url());
+    const url = await kit.state.browser.withPage(async (page) => page.url());
     expect(url).toBe("https://example.com/");
   });
 
-  test("goto with explicit pageId", async () => {
-    const result = await tools.goto.execute!(
+  test("goto pageId shortcut selects page before navigating", async () => {
+    await kit.state.browser.newPage();
+    await tools.goto.execute!(
       { pageId: defaultPageId, url: "https://example.org" },
       { ...toolOpts, messages: [] },
     );
-    expect(typeof result).toBe("string");
-    const url = await kit.state.browser.withPage(defaultPageId, async (page) =>
+    const defaultUrl = await kit.state.browser.withPage(async (page) =>
       page.url(),
+      { pageId: defaultPageId },
     );
-    expect(url).toBe("https://example.org/");
+    expect(defaultUrl).toBe("https://example.org/");
+
+    await tools.closePage.execute!({}, { ...toolOpts, messages: [] });
   });
 
   test("inspectHTML tool should return HTML content", async () => {
@@ -78,7 +81,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   test("type tool should type text into an input", async () => {
-    await kit.state.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -98,14 +101,14 @@ describe("Browser Tools Integration Tests", () => {
 
     expect(typeof result).toBe("string");
 
-    const inputValue = await kit.state.browser.withPage(undefined, async (page) =>
+    const inputValue = await kit.state.browser.withPage(async (page) =>
       page.locator("#test-input").inputValue(),
     );
     expect(inputValue).toBe("Hello World");
   });
 
   test("click tool should click an element", async () => {
-    await kit.state.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -122,7 +125,7 @@ describe("Browser Tools Integration Tests", () => {
 
     expect(typeof result).toBe("string");
 
-    const bgColor = await kit.state.browser.withPage(undefined, async (page) =>
+    const bgColor = await kit.state.browser.withPage(async (page) =>
       page.evaluate(() => document.body.style.backgroundColor),
     );
     expect(bgColor).toBe("red");
@@ -139,7 +142,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   test("viewPage tool should return simplified page content by default", async () => {
-    await kit.state.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -162,7 +165,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   test("viewPage markdown format returns readable content", async () => {
-    await kit.state.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -185,7 +188,7 @@ describe("Browser Tools Integration Tests", () => {
   });
 
   test("viewPage accessibility format returns ARIA snapshot", async () => {
-    await kit.state.browser.withPage(undefined, async (page) => {
+    await kit.state.browser.withPage(async (page) => {
       await page.setContent(`
       <html>
         <body>
@@ -205,8 +208,8 @@ describe("Browser Tools Integration Tests", () => {
     expect((result as string)).toContain("Accessible Title");
   });
 
-  test("createContext and createPage open a second page", async () => {
-    const ctxResult = await tools.createContext.execute!(
+  test("newContext and newPage open a second page", async () => {
+    const ctxResult = await tools.newContext.execute!(
       {},
       { ...toolOpts, messages: [] },
     );
@@ -214,14 +217,14 @@ describe("Browser Tools Integration Tests", () => {
       contextId: string;
     };
 
-    const pageResult = await tools.createPage.execute!(
-      { contextId },
+    const pageResult = await tools.newPage.execute!(
+      {},
       { ...toolOpts, messages: [] },
     );
     const { pageId } = JSON.parse(pageResult as string) as { pageId: string };
 
     await tools.goto.execute!(
-      { pageId, url: "https://example.com" },
+      { url: "https://example.com" },
       { ...toolOpts, messages: [] },
     );
 
@@ -231,11 +234,10 @@ describe("Browser Tools Integration Tests", () => {
     );
     expect(list).toContain(contextId);
     expect(list).toContain(pageId);
+    expect(list).toContain("active page");
 
-    await tools.closePage.execute!({ pageId }, { ...toolOpts, messages: [] });
-    await tools.closeContext.execute!(
-      { contextId },
-      { ...toolOpts, messages: [] },
-    );
+    await tools.closePage.execute!({}, { ...toolOpts, messages: [] });
+    kit.state.browser.selectContext(contextId);
+    await tools.closeContext.execute!({}, { ...toolOpts, messages: [] });
   });
 });

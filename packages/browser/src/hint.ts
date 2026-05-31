@@ -1,15 +1,15 @@
 /** System text for agents using the browser toolkit. Append to your base system instructions. */
 export const BROWSER_TOOLKIT_HINT = `## Browser tools
 
-You control real browser pages via Playwright-backed tools. Each page has a **pageId** (UUID). Omit **pageId** to use the default page.
+You control real browser pages via Playwright-backed tools. **Action tools run on the active page** unless you pass optional \`pageId\` / \`contextId\` shortcuts (from \`listContexts\`) to switch before the action. Use \`selectPage\` / \`selectContext\` when you only need to switch.
 
-- **Lifecycle:** \`createContext\`, \`createPage\` (optional \`contextId\`), \`listContexts\`, \`closePage\`, \`closeContext\`.
+- **Lifecycle:** \`newContext\`, \`newPage\` (creates and activates), \`selectContext\`, \`selectPage\`, \`listContexts\`, \`closePage\` (active page), \`closeContext\` (active context).
 - **Navigation:** \`goto\` with a full URL.
 - **Understanding the page:** \`viewPage\` (\`format\`: \`simplified\`, \`accessibility\`, or \`markdown\`), \`inspectHTML\`, \`getScreenshot\` (multimodal).
 - **Interaction:** \`click\` and \`type\` with CSS selectors. Use \`evaluate\` only for small, scoped scripts.
 - **Diagnostics:** \`inspectConsole\` and \`inspectNetwork\` read **recent ring buffers** (not full history); tool output may truncate large fields.
-- **Cookies:** \`getCookies\` for the page's context.
+- **Cookies:** \`getCookies\` for the active page's context.
 
 Several tools support \`viewAfter: { format: "simplified" | "accessibility" | "markdown" }\` to append a page view after the action.
 
-Call \`listContexts\` after opening pages to discover **pageId** values. The host app should call \`await state.browser.close()\` when the run ends.`;
+Call \`listContexts\` to see context/page UUIDs before \`selectPage\` or \`selectContext\`. The host app should call \`await state.browser.close()\` when the run ends.`;

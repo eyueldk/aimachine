@@ -1,26 +1,27 @@
 import { tool } from "ai";
 import { z } from "zod";
 import type { BrowserInstance } from "../browser/browser-instance";
+import { ActiveTargetSchema } from "../schema";
 import { truncateString } from "../utils";
-import { PageIdSchema } from "../schema";
 
 const MAX_CONSOLE_TEXT = 2_000;
 
 export function createInspectConsoleTool({ browser }: { browser: BrowserInstance }) {
   return tool({
     description:
-      "Retrieve recent console logs for the selected page (ring buffer; long lines truncated in output).",
-    inputSchema: z.object({
-      pageId: PageIdSchema,
-      limit: z
-        .number()
-        .optional()
-        .describe(
-          "Maximum number of recent logs to return. Omit to return all buffered logs.",
-        ),
-    }),
-    execute: async ({ pageId, limit }) => {
-      return browser.withPage(pageId, async (_page, entry) => {
+      "Retrieve recent console logs for the active page (ring buffer; long lines truncated in output).",
+    inputSchema: z
+      .object({
+        limit: z
+          .number()
+          .optional()
+          .describe(
+            "Maximum number of recent logs to return. Omit to return all buffered logs.",
+          ),
+      })
+      .extend(ActiveTargetSchema.shape),
+    execute: async ({ limit, contextId, pageId }) => {
+      return browser.withPage(async (_page, entry) => {
         const messages = entry.consoleInspector.getRecent(limit);
         const formattedLogs = messages
           .map(
@@ -31,7 +32,7 @@ export function createInspectConsoleTool({ browser }: { browser: BrowserInstance
         const output = [`Console logs (${messages.length} messages):`];
         output.push(formattedLogs || "(no logs)");
         return output.join("\n");
-      });
+      }, { contextId, pageId });
     },
   });
 }

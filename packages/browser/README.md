@@ -8,7 +8,7 @@ Playwright-backed browser tools for the [Vercel AI SDK](https://ai-sdk.dev). Pla
 ## Features
 
 - **`createBrowserToolkit({ browserWSEndpoint? })`** → `{ tools, hint, state }` with **`state.browser`** (`BrowserInstance`)
-- Page tools keyed by **`pageId`** (omit for the default page)
+- **Active page** model: action tools run on the active page; optional **`pageId`** / **`contextId`** on each action tool switch target first, or use **`selectPage`** / **`selectContext`**
 - **`viewPage`** / **`viewAfter`** formats: `simplified`, `accessibility`, `markdown` (Turndown + GFM)
 - Console/network ring buffers; screenshot tool with multimodal output
 
@@ -49,9 +49,9 @@ createBrowserToolkit({ browserWSEndpoint: process.env.BROWSER_WS });
 
 ## Tools
 
-Lifecycle: **`createContext`**, **`createPage`**, **`listContexts`**, **`closePage`**, **`closeContext`**.
+Lifecycle: **`newContext`**, **`newPage`**, **`selectContext`**, **`selectPage`**, **`listContexts`**, **`closePage`** (active page), **`closeContext`** (active context).
 
-Actions: **`goto`**, **`click`**, **`type`**, **`evaluate`**, **`viewPage`**, **`inspectHTML`**, **`getScreenshot`**, **`inspectConsole`**, **`inspectNetwork`**, **`getCookies`**.
+Actions (active page; optional **`pageId`** / **`contextId`** shortcuts): **`goto`**, **`click`**, **`type`**, **`evaluate`**, **`viewPage`**, **`inspectHTML`**, **`getScreenshot`**, **`inspectConsole`**, **`inspectNetwork`**, **`getCookies`**.
 
 ## Configuration
 
@@ -59,7 +59,26 @@ Actions: **`goto`**, **`click`**, **`type`**, **`evaluate`**, **`viewPage`**, **
 | --- | --- |
 | **`browserWSEndpoint`** | WebSocket URL to attach instead of launching Chromium locally |
 
-## Migration (1.x → 2.0)
+## Examples
+
+Target a specific page when calling an action (no separate `selectPage` call):
+
+```ts
+await tools.goto.execute({
+  pageId: "…from listContexts",
+  url: "https://example.org",
+});
+```
+
+## Migration
+
+### 2.0 → 2.1
+
+- Lifecycle tools renamed: **`createContext`** → **`newContext`**, **`createPage`** → **`newPage`**; added **`selectContext`** / **`selectPage`**.
+- Action tools use the **active** page by default. Pass optional **`pageId`** / **`contextId`** on an action to switch first, or call **`selectPage`** / **`selectContext`**.
+- **`closePage`** / **`closeContext`** close the active page/context (no id arguments).
+
+### 1.x → 2.0
 
 - Teardown: **`await state.browser.close()`** (was top-level **`browser`**).
 - **`viewPage`** / **`viewAfter`**: use **`format`**, not **`mode`** (`simplified` \| `accessibility` \| `markdown`).

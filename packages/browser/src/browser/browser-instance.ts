@@ -1,4 +1,5 @@
 import { chromium, type Browser, type Page } from "playwright";
+import type { ActiveTarget } from "../schema";
 import { ContextInstance } from "./context-instance";
 import { PageInstance } from "./page-instance";
 
@@ -16,14 +17,22 @@ export class BrowserInstance {
   private browserPromise: Promise<Browser> | undefined;
   private readonly pages = new Map<string, PageInstance>();
   private readonly contexts = new Map<string, ContextInstance>();
-  private defaultContextId: string | undefined;
-  private defaultPageId: string | undefined;
+  private activeContextId: string | undefined;
+  private activePageId: string | undefined;
 
   constructor(options?: BrowserInstanceOptions) {
     this.browserWSEndpoint = options?.browserWSEndpoint;
   }
 
-  async createContext(): Promise<string> {
+  getActiveContextId(): string | undefined {
+    return this.activeContextId;
+  }
+
+  getActivePageId(): string | undefined {
+    return this.activePageId;
+  }
+
+  async newContext(): Promise<string> {
     const playwrightBrowser = await this.getBrowser();
     const context = await playwrightBrowser.newContext();
     const contextId = crypto.randomUUID();
@@ -31,32 +40,52 @@ export class BrowserInstance {
       contextId,
       new ContextInstance({ contextId, context }),
     );
-    if (!this.defaultContextId) {
-      this.defaultContextId = contextId;
-    }
+    this.activeContextId = contextId;
+    this.activePageId = undefined;
     return contextId;
   }
 
-  async createPage(contextId?: string): Promise<string> {
-    const resolvedContextId = await this.resolveContextId(contextId);
-    const ctx = this.contexts.get(resolvedContextId);
+  async newPage(): Promise<string> {
+    const contextId = await this.ensureActiveContext();
+    const ctx = this.contexts.get(contextId);
     if (!ctx) {
-      throw new Error(`Unknown contextId: ${resolvedContextId}`);
+      throw new Error(`Unknown contextId: ${contextId}`);
     }
     const page = await ctx.context.newPage();
     const pageId = crypto.randomUUID();
     const instance = new PageInstance({
       pageId,
-      contextId: resolvedContextId,
+      contextId,
       context: ctx.context,
       page,
     });
     this.pages.set(pageId, instance);
     ctx.pageIds.add(pageId);
-    if (!this.defaultPageId) {
-      this.defaultPageId = pageId;
-    }
+    this.activePageId = pageId;
     return pageId;
+  }
+
+  selectContext(contextId: string): void {
+    if (!this.contexts.has(contextId)) {
+      throw new Error(`Unknown contextId: ${contextId}`);
+    }
+    this.activeContextId = contextId;
+    const activePage = this.activePageId
+      ? this.pages.get(this.activePageId)
+      : undefined;
+    if (!activePage || activePage.contextId !== contextId) {
+      const ctx = this.contexts.get(contextId);
+      this.activePageId = ctx?.pageIds.values().next().value;
+    }
+  }
+
+  selectPage(pageId: string): void {
+    const instance = this.pages.get(pageId);
+    if (!instance) {
+      throw new Error(`Unknown pageId: ${pageId}`);
+    }
+    this.activePageId = pageId;
+    this.activeContextId = instance.contextId;
   }
 
   listContexts(): ContextInfo[] {
@@ -64,6 +93,22 @@ export class BrowserInstance {
       contextId: ctx.contextId,
       pageIds: [...ctx.pageIds],
     }));
+  }
+
+  async closeActivePage(): Promise<void> {
+    const pageId = this.activePageId;
+    if (!pageId) {
+      throw new Error("No active page to close.");
+    }
+    await this.closePage(pageId);
+  }
+
+  async closeActiveContext(): Promise<void> {
+    const contextId = this.activeContextId;
+    if (!contextId) {
+      throw new Error("No active context to close.");
+    }
+    await this.closeContext(contextId);
   }
 
   async closePage(pageId: string): Promise<void> {
@@ -75,8 +120,8 @@ export class BrowserInstance {
     this.pages.delete(pageId);
     const ctx = this.contexts.get(instance.contextId);
     ctx?.pageIds.delete(pageId);
-    if (this.defaultPageId === pageId) {
-      this.defaultPageId = this.pages.keys().next().value;
+    if (this.activePageId === pageId) {
+      this.activePageId = ctx?.pageIds.values().next().value;
     }
   }
 
@@ -90,8 +135,12 @@ export class BrowserInstance {
     }
     await ctx.close();
     this.contexts.delete(contextId);
-    if (this.defaultContextId === contextId) {
-      this.defaultContextId = this.contexts.keys().next().value;
+    if (this.activeContextId === contextId) {
+      this.activeContextId = this.contexts.keys().next().value;
+      const nextCtx = this.activeContextId
+        ? this.contexts.get(this.activeContextId)
+        : undefined;
+      this.activePageId = nextCtx?.pageIds.values().next().value;
     }
   }
 
@@ -107,8 +156,8 @@ export class BrowserInstance {
       await ctx.close();
     }
     this.contexts.clear();
-    this.defaultContextId = undefined;
-    this.defaultPageId = undefined;
+    this.activeContextId = undefined;
+    this.activePageId = undefined;
     if (!this.browserPromise) {
       return;
     }
@@ -117,14 +166,24 @@ export class BrowserInstance {
     await browser.close();
   }
 
+  applyActiveTarget(target?: ActiveTarget): void {
+    if (target?.contextId) {
+      this.selectContext(target.contextId);
+    }
+    if (target?.pageId) {
+      this.selectPage(target.pageId);
+    }
+  }
+
   async withPage<T>(
-    pageId: string | undefined,
     fn: (page: Page, instance: PageInstance) => Promise<T>,
+    target?: ActiveTarget,
   ): Promise<T> {
-    const resolvedPageId = await this.ensureDefaultPage(pageId);
-    const instance = this.pages.get(resolvedPageId);
+    this.applyActiveTarget(target);
+    const pageId = await this.ensureActivePage();
+    const instance = this.pages.get(pageId);
     if (!instance) {
-      throw new Error(`Unknown pageId: ${resolvedPageId}`);
+      throw new Error(`Unknown pageId: ${pageId}`);
     }
     return fn(instance.page, instance);
   }
@@ -136,28 +195,19 @@ export class BrowserInstance {
     return this.browserPromise;
   }
 
-  private async ensureDefaultPage(pageId?: string): Promise<string> {
-    if (pageId) {
-      return pageId;
+  private async ensureActivePage(): Promise<string> {
+    if (this.activePageId && this.pages.has(this.activePageId)) {
+      return this.activePageId;
     }
-    if (this.defaultPageId) {
-      return this.defaultPageId;
-    }
-    await this.createContext();
-    return this.createPage(this.defaultContextId);
+    await this.ensureActiveContext();
+    return this.newPage();
   }
 
-  private async resolveContextId(contextId?: string): Promise<string> {
-    if (contextId) {
-      if (!this.contexts.has(contextId)) {
-        throw new Error(`Unknown contextId: ${contextId}`);
-      }
-      return contextId;
+  private async ensureActiveContext(): Promise<string> {
+    if (this.activeContextId && this.contexts.has(this.activeContextId)) {
+      return this.activeContextId;
     }
-    if (this.defaultContextId) {
-      return this.defaultContextId;
-    }
-    return this.createContext();
+    return this.newContext();
   }
 
   private async connectOrLaunch(): Promise<Browser> {

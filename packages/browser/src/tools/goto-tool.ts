@@ -2,19 +2,20 @@ import { tool } from "ai";
 import { z } from "zod";
 import type { BrowserInstance } from "../browser/browser-instance";
 import { getPageView } from "../utils";
-import { PageIdSchema, ViewAfterSchema } from "../schema";
+import { ActiveTargetSchema, ViewAfterSchema } from "../schema";
 
 export function createGotoTool({ browser }: { browser: BrowserInstance }) {
   return tool({
-    description: "Navigate to a URL in the selected browser page",
-    inputSchema: z.object({
-      pageId: PageIdSchema,
-      url: z.string().describe("The URL to navigate to"),
-      viewAfter: ViewAfterSchema,
-    }),
-    execute: async ({ pageId, url, viewAfter }) => {
+    description: "Navigate to a URL in the active browser page",
+    inputSchema: z
+      .object({
+        url: z.string().describe("The URL to navigate to"),
+        viewAfter: ViewAfterSchema,
+      })
+      .extend(ActiveTargetSchema.shape),
+    execute: async ({ url, viewAfter, contextId, pageId }) => {
       try {
-        return await browser.withPage(pageId, async (page) => {
+        return await browser.withPage(async (page) => {
           await page.goto(url, { waitUntil: "load" });
           const base = `Navigated to URL: ${url}`;
           const output: string[] = [base];
@@ -22,7 +23,7 @@ export function createGotoTool({ browser }: { browser: BrowserInstance }) {
             output.push(await getPageView(page, viewAfter.format));
           }
           return output.join("\n\n");
-        });
+        }, { contextId, pageId });
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
