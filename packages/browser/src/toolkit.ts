@@ -1,4 +1,4 @@
-import { BrowserInstance, type BrowserInstanceOptions } from "./browser/browser-instance";
+import { BrowserInstance } from "./browser/browser-instance";
 import { BROWSER_TOOLKIT_HINT } from "./hint";
 import { createBrowserTools } from "./tools";
 
@@ -17,8 +17,9 @@ export type BrowserToolkitState = {
 export type BrowserToolkit = Toolkit<BrowserTools, BrowserToolkitState>;
 
 export type CreateBrowserToolkitOptions = {
-  browser?: BrowserInstance;
-} & BrowserInstanceOptions;
+  /** WebSocket URL to attach instead of launching Chromium locally. */
+  browserWsEndpoint?: string;
+};
 
 /**
  * Primary entry point: AI SDK `tools`, bundled `hint`, and `{ browser }` on `state`.
@@ -27,8 +28,9 @@ export type CreateBrowserToolkitOptions = {
 export function createBrowserToolkit(
   options?: CreateBrowserToolkitOptions,
 ): BrowserToolkit {
-  const { browser: existingBrowser, ...browserOptions } = options ?? {};
-  const browser = existingBrowser ?? new BrowserInstance(browserOptions);
+  const browser = new BrowserInstance({
+    browserWsEndpoint: options?.browserWsEndpoint,
+  });
   const tools = createBrowserTools({ browser });
   return {
     tools,

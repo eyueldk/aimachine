@@ -9,11 +9,11 @@ export type ContextInfo = {
 };
 
 export type BrowserInstanceOptions = {
-  browserWSEndpoint?: string;
+  browserWsEndpoint?: string;
 };
 
 export class BrowserInstance {
-  private readonly browserWSEndpoint?: string;
+  private readonly browserWsEndpoint?: string;
   private browserPromise: Promise<Browser> | undefined;
   private readonly pages = new Map<string, PageInstance>();
   private readonly contexts = new Map<string, ContextInstance>();
@@ -21,7 +21,7 @@ export class BrowserInstance {
   private activePageId: string | undefined;
 
   constructor(options?: BrowserInstanceOptions) {
-    this.browserWSEndpoint = options?.browserWSEndpoint;
+    this.browserWsEndpoint = options?.browserWsEndpoint;
   }
 
   getActiveContextId(): string | undefined {
@@ -211,8 +211,8 @@ export class BrowserInstance {
   }
 
   private async connectOrLaunch(): Promise<Browser> {
-    if (this.browserWSEndpoint) {
-      return chromium.connect(this.browserWSEndpoint);
+    if (this.browserWsEndpoint) {
+      return chromium.connect(this.browserWsEndpoint);
     }
     return chromium.launch({
       headless: true,

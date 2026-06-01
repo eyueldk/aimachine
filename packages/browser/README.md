@@ -7,7 +7,7 @@ Playwright-backed browser tools for the [Vercel AI SDK](https://ai-sdk.dev). Pla
 
 ## Features
 
-- **`createBrowserToolkit({ browserWSEndpoint? })`** → `{ tools, hint, state }` with **`state.browser`** (`BrowserInstance`)
+- **`createBrowserToolkit({ browserWsEndpoint? })`** → `{ tools, hint, state }` with **`state.browser`** (`BrowserInstance`; always created internally)
 - **Active page** model: action tools run on the active page; optional **`pageId`** / **`contextId`** on each action tool switch target first, or use **`selectPage`** / **`selectContext`**
 - **`viewPage`** / **`viewAfter`** formats: `simplified`, `accessibility`, `markdown` (Turndown + GFM)
 - Console/network ring buffers; screenshot tool with multimodal output
@@ -44,7 +44,7 @@ try {
 Attach to an existing browser (Browserless, remote Playwright, etc.):
 
 ```ts
-createBrowserToolkit({ browserWSEndpoint: process.env.BROWSER_WS });
+createBrowserToolkit({ browserWsEndpoint: process.env.BROWSER_WS });
 ```
 
 ## Tools
@@ -57,7 +57,7 @@ Actions (active page; optional **`pageId`** / **`contextId`** shortcuts): **`got
 
 | Option | Description |
 | --- | --- |
-| **`browserWSEndpoint`** | WebSocket URL to attach instead of launching Chromium locally |
+| **`browserWsEndpoint`** | WebSocket URL to attach instead of launching Chromium locally |
 
 ## Examples
 
@@ -71,6 +71,10 @@ await tools.goto.execute({
 ```
 
 ## Migration
+
+### 2.1.x
+
+- **`createBrowserToolkit`** no longer accepts a pre-built **`BrowserInstance`**; pass **`browserWsEndpoint`** only (renamed from **`browserWSEndpoint`**).
 
 ### 2.0 → 2.1
 
