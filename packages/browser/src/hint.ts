@@ -12,4 +12,4 @@ You control real browser pages via Playwright-backed tools. **Action tools run o
 
 Several tools support \`viewAfter: { format: "simplified" | "accessibility" | "markdown" }\` to append a page view after the action.
 
-Call \`listContexts\` to see context/page UUIDs before \`selectPage\` or \`selectContext\`. The host app should call \`await state.browser.close()\` when the run ends.`;
+Call \`listContexts\` to see context/page UUIDs before \`selectPage\` or \`selectContext\`. Optional \`browserWsEndpoint\` on toolkit creation attaches to an existing Chromium over CDP (\`connectOverCDP\`). The host app should call \`await state.browser.close()\` when the run ends.`;

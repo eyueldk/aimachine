@@ -7,7 +7,7 @@ Playwright-backed browser tools for the [Vercel AI SDK](https://ai-sdk.dev). Pla
 
 ## Features
 
-- **`createBrowserToolkit({ browserWsEndpoint? })`** → `{ tools, hint, state }` with **`state.browser`** (`BrowserInstance`; always created internally)
+- **`createBrowserToolkit({ browserWsEndpoint? })`** → `{ tools, hint, state }` with **`state.browser`** (always created internally; launches Chromium or attaches over **CDP**)
 - **Active page** model: action tools run on the active page; optional **`pageId`** / **`contextId`** on each action tool switch target first, or use **`selectPage`** / **`selectContext`**
 - **`viewPage`** / **`viewAfter`** formats: `simplified`, `accessibility`, `markdown` (Turndown + GFM)
 - Console/network ring buffers; screenshot tool with multimodal output
@@ -91,6 +91,7 @@ await tools.goto.execute({
 ## Troubleshooting
 
 - Local tests need Chromium once: `pnpm exec playwright install chromium` (from this package directory).
+- **`browserWsEndpoint`** must be a **CDP** URL (`http://127.0.0.1:9222` or `ws://…`), not a Playwright Browser-server WebSocket. Start Chromium with e.g. `--remote-debugging-port=9222`.
 
 ## License
 
