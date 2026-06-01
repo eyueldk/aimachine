@@ -41,10 +41,10 @@ try {
 }
 ```
 
-Attach to an existing browser (Browserless, remote Playwright, etc.):
+Attach to an existing Chromium instance over CDP (e.g. `--remote-debugging-port=9222`):
 
 ```ts
-createBrowserToolkit({ browserWsEndpoint: process.env.BROWSER_WS });
+createBrowserToolkit({ browserWsEndpoint: "http://127.0.0.1:9222" });
 ```
 
 ## Tools
@@ -57,7 +57,7 @@ Actions (active page; optional **`pageId`** / **`contextId`** shortcuts): **`got
 
 | Option | Description |
 | --- | --- |
-| **`browserWsEndpoint`** | WebSocket URL to attach instead of launching Chromium locally |
+| **`browserWsEndpoint`** | CDP endpoint URL (`http://` or `ws://`); uses Playwright `connectOverCDP` instead of launching Chromium |
 
 ## Examples
 
@@ -75,6 +75,7 @@ await tools.goto.execute({
 ### 2.1.x
 
 - **`createBrowserToolkit`** no longer accepts a pre-built **`BrowserInstance`**; pass **`browserWsEndpoint`** only (renamed from **`browserWSEndpoint`**).
+- Remote attach uses **`chromium.connectOverCDP`** (CDP endpoint), not **`chromium.connect`** (Playwright WebSocket).
 
 ### 2.0 → 2.1
 

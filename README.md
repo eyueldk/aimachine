@@ -8,7 +8,7 @@ Monorepo for [**@eyueldk/aisdk-toolkit-***](https://github.com/eyueldk/aisdk-too
 
 | Package | Version | Docs |
 | --- | --- | --- |
-| [@eyueldk/aisdk-toolkit-browser](packages/browser) | 2.1.1 | Playwright browser automation (active page + target shortcuts) |
+| [@eyueldk/aisdk-toolkit-browser](packages/browser) | 2.1.2 | Playwright browser automation (active page + target shortcuts) |
 | [@eyueldk/aisdk-toolkit-fetch](packages/fetch) | 1.0.0 | HTTP `fetchRequest` tool |
 | [@eyueldk/aisdk-toolkit-todos](packages/todos) | 1.2.1 | `writeTodos` / `readTodos` |
 | [@eyueldk/aisdk-toolkit-filesystem](packages/filesystem) | 1.2.0 | `read` / `write` / `edit` / `list` / `glob` / `grep` |

@@ -212,7 +212,7 @@ export class BrowserInstance {
 
   private async connectOrLaunch(): Promise<Browser> {
     if (this.browserWsEndpoint) {
-      return chromium.connect(this.browserWsEndpoint);
+      return chromium.connectOverCDP(this.browserWsEndpoint);
     }
     return chromium.launch({
       headless: true,

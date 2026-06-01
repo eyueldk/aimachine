@@ -17,7 +17,7 @@ export type BrowserToolkitState = {
 export type BrowserToolkit = Toolkit<BrowserTools, BrowserToolkitState>;
 
 export type CreateBrowserToolkitOptions = {
-  /** WebSocket URL to attach instead of launching Chromium locally. */
+  /** Chrome DevTools Protocol endpoint (`http://` or `ws://`) to attach via `connectOverCDP` instead of launching Chromium locally. */
   browserWsEndpoint?: string;
 };
 
